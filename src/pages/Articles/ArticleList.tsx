@@ -104,130 +104,140 @@ export default function ArticleList() {
 
       <div className="space-y-6">
         <ComponentCard title="Articles List">
-          <div className="overflow-hidden rounded-xl border bg-white">
+         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
+  <div className="overflow-x-auto">
 
-            <div className="overflow-x-auto max-w-full">
+    <Table>
 
-              <Table>
+      <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+        <TableRow>
 
-                <TableHeader className="border-b">
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Sr No
+          </TableCell>
 
-                  <TableRow>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-left text-sm font-semibold"
+          >
+            Name
+          </TableCell>
 
-                    <TableCell isHeader>Sr No</TableCell>
-                    <TableCell isHeader>Image</TableCell>
-                    <TableCell isHeader>Name</TableCell>
-                    <TableCell isHeader>Published Date</TableCell>
-                    <TableCell isHeader>Source</TableCell>
-                    <TableCell isHeader>Status</TableCell>
-                    <TableCell isHeader>Action</TableCell>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Published Date
+          </TableCell>
 
-                  </TableRow>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Status
+          </TableCell>
 
-                </TableHeader>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Action
+          </TableCell>
 
-                <TableBody>
+        </TableRow>
+      </TableHeader>
 
-                  {loading ? (
-                    <TableRow>
-                      <TableCell>Loading...</TableCell>
-                    </TableRow>
-                  ) : items.length > 0 ? (
-                    items.map((item, index) => (
-                      <TableRow key={item._id}>
+      <TableBody>
 
-                        {/* SR NO */}
-                        <TableCell>
-                          {index + 1}
-                        </TableCell>
+        {loading ? (
 
-                        {/* IMAGE */}
-                        <TableCell>
-                          <img
-                            src={item.image}
-                            className="h-14 w-14 rounded border object-cover"
-                          />
-                        </TableCell>
+          <TableRow>
+            <TableCell
+              colSpan={5}
+              className="py-10 text-center text-gray-500"
+            >
+              Loading...
+            </TableCell>
+          </TableRow>
 
-                        {/* NAME */}
-                        <TableCell>
-                          {item.name}
-                        </TableCell>
+        ) : items.length > 0 ? (
 
-                        {/* DATE */}
-                        <TableCell>
-                          {new Date(
-                            item.publishedDate
-                          ).toLocaleDateString()}
-                        </TableCell>
+          items.map((item, index) => (
 
-                        {/* SOURCE */}
-                        <TableCell>
-                          {item.sourceName}
-                        </TableCell>
+            <TableRow
+              key={item._id}
+              className="border-b border-gray-100 transition hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
+            >
 
-                        {/* STATUS */}
-                        <TableCell>
-                          <button
-                            onClick={() =>
-                              handleStatus(item._id)
-                            }
-                          >
-                            <Badge
-                              size="sm"
-                              color={
-                                item.status === 1
-                                  ? "success"
-                                  : "error"
-                              }
-                            >
-                              {item.status === 1
-                                ? "Active"
-                                : "Inactive"}
-                            </Badge>
-                          </button>
-                        </TableCell>
+              <TableCell className="px-6 py-4 text-center font-medium">
+                {index + 1}
+              </TableCell>
 
-                        {/* ACTION */}
-                        <TableCell>
-                          <div className="flex gap-2">
+              <TableCell className="px-6 py-4 font-medium">
+                {item.name}
+              </TableCell>
 
-                            <Link
-                              to={`/edit-article/${item._id}`}
-                              className="bg-blue-500 text-white px-3 py-1 rounded"
-                            >
-                              Edit
-                            </Link>
+              <TableCell className="px-6 py-4 text-center">
+                {new Date(item.publishedDate).toLocaleDateString()}
+              </TableCell>
 
-                            <button
-                              onClick={() =>
-                                handleDelete(item._id)
-                              }
-                              className="bg-red-500 text-white px-3 py-1 rounded"
-                            >
-                              Delete
-                            </button>
+              <TableCell className="px-6 py-4 text-center">
+                <button onClick={() => handleStatus(item._id)}>
+                  <Badge
+                    size="sm"
+                    color={item.status === 1 ? "success" : "error"}
+                  >
+                    {item.status === 1 ? "Active" : "Inactive"}
+                  </Badge>
+                </button>
+              </TableCell>
 
-                          </div>
-                        </TableCell>
+              <TableCell className="px-6 py-4">
+                <div className="flex items-center justify-center gap-2">
 
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center">
-                        No Articles Found
-                      </TableCell>
-                    </TableRow>
-                  )}
+                  <Link
+                    to={`/edit-article/${item._id}`}
+                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                  >
+                    Edit
+                  </Link>
 
-                </TableBody>
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
 
-              </Table>
+                </div>
+              </TableCell>
 
-            </div>
+            </TableRow>
 
-          </div>
+          ))
+
+        ) : (
+
+          <TableRow>
+            <TableCell
+              colSpan={5}
+              className="py-10 text-center text-gray-500"
+            >
+              No Articles Found
+            </TableCell>
+          </TableRow>
+
+        )}
+
+      </TableBody>
+
+    </Table>
+
+  </div>
+</div>
         </ComponentCard>
       </div>
     </>

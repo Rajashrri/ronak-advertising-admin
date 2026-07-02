@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import { toast } from "react-toastify";
+import { Link } from "react-router";
 
 import {
   getClientDetailApi,
@@ -148,11 +149,22 @@ export default function EditClientele() {
 
                   </div>
 
-                  <button
-                    className="rounded-lg bg-brand-500 px-4 py-3 text-white"
-                  >
-                    Update Client
-                  </button>
+                 
+                  <div className="mt-6 flex justify-end gap-3">
+                    <Link
+                      to="/list-clientele"
+                      className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                    >
+                      Back
+                    </Link>
+
+                    <button
+                      type="submit"
+                      className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    >
+                      Update
+                    </button>
+                  </div>
 
                 </div>
 

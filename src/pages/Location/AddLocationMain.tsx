@@ -416,13 +416,15 @@ export default function AddLocationMain() {
                 </div>
 
                 <div className="mt-8">
-
-                  <button
-                    type="submit"
-                    className="rounded-lg bg-brand-500 px-6 py-3 text-white"
-                  >
-                    Add Location
-                  </button>
+<div className="mt-6 flex justify-end gap-3">
+             
+                    <button
+                      type="submit"
+                      className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    >
+                      Add
+                    </button>
+                  </div>
 
                 </div>
 

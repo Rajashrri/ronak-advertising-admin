@@ -101,155 +101,148 @@ export default function MediaCoverageList() {
     <>
       <PageBreadcrumb pageTitle="Media Coverage List" />
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         <ComponentCard title="Media Coverage List">
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
+  <div className="overflow-x-auto">
 
-            <div className="max-w-full overflow-x-auto">
+    <Table>
 
-              <Table>
+      <TableHeader className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <TableRow>
 
-                <TableHeader className="border-b">
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Sr No
+          </TableCell>
 
-                  <TableRow>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-left text-sm font-semibold"
+          >
+            Name
+          </TableCell>
 
-                    <TableCell isHeader>
-                      Sr No
-                    </TableCell>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Published Date
+          </TableCell>
 
-                    <TableCell isHeader>
-                      Image
-                    </TableCell>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Status
+          </TableCell>
 
-                    <TableCell isHeader>
-                      Name
-                    </TableCell>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Action
+          </TableCell>
 
-                    <TableCell isHeader>
-                      Published Date
-                    </TableCell>
+        </TableRow>
+      </TableHeader>
 
-                    <TableCell isHeader>
-                      Source
-                    </TableCell>
+      <TableBody>
 
-                    <TableCell isHeader>
-                      Status
-                    </TableCell>
+        {loading ? (
 
-                    <TableCell isHeader>
-                      Action
-                    </TableCell>
+          <TableRow>
 
-                  </TableRow>
+            <TableCell
+              colSpan={5}
+              className="py-10 text-center text-gray-500"
+            >
+              Loading...
+            </TableCell>
 
-                </TableHeader>
+          </TableRow>
 
-                <TableBody>
+        ) : items.length > 0 ? (
 
-                  {loading ? (
-                    <TableRow>
-                      <TableCell>
-                        Loading...
-                      </TableCell>
-                    </TableRow>
-                  ) : items.length > 0 ? (
-                    items.map((item, index) => (
-                      <TableRow key={item._id}>
+          items.map((item, index) => (
 
-                        {/* Sr No */}
-                        <TableCell>
-                          {index + 1}
-                        </TableCell>
+            <TableRow
+              key={item._id}
+              className="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200 dark:border-gray-800 dark:hover:bg-gray-800"
+            >
 
-                        {/* Image */}
-                        <TableCell>
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="h-14 w-14 rounded-lg border object-cover"
-                          />
-                        </TableCell>
+              <TableCell className="px-6 py-4 text-center font-medium">
+                {index + 1}
+              </TableCell>
 
-                        {/* Name */}
-                        <TableCell>
-                          {item.name}
-                        </TableCell>
+              <TableCell className="px-6 py-4 font-medium">
+                {item.name}
+              </TableCell>
 
-                        {/* Date */}
-                        <TableCell>
-                          {new Date(
-                            item.publishedDate
-                          ).toLocaleDateString()}
-                        </TableCell>
+              <TableCell className="px-6 py-4 text-center">
+                {new Date(item.publishedDate).toLocaleDateString()}
+              </TableCell>
 
-                        {/* Source */}
-                        <TableCell>
-                          {item.sourceName}
-                        </TableCell>
+              <TableCell className="px-6 py-4 text-center">
+                <button onClick={() => handleStatus(item._id)}>
+                  <Badge
+                    size="sm"
+                    color={item.status === 1 ? "success" : "error"}
+                  >
+                    {item.status === 1 ? "Active" : "Inactive"}
+                  </Badge>
+                </button>
+              </TableCell>
 
-                        {/* Status */}
-                        <TableCell>
-                          <button
-                            onClick={() =>
-                              handleStatus(item._id)
-                            }
-                          >
-                            <Badge
-                              size="sm"
-                              color={
-                                item.status === 1
-                                  ? "success"
-                                  : "error"
-                              }
-                            >
-                              {item.status === 1
-                                ? "Active"
-                                : "Inactive"}
-                            </Badge>
-                          </button>
-                        </TableCell>
+              <TableCell className="px-6 py-4">
 
-                        {/* Actions */}
-                        <TableCell>
-                          <div className="flex gap-2">
+                <div className="flex items-center justify-center gap-2">
 
-                            <Link
-                              to={`/edit-media-coverage/${item._id}`}
-                              className="rounded-lg bg-blue-500 px-3 py-2 text-sm text-white hover:bg-blue-600"
-                            >
-                              Edit
-                            </Link>
+                  <Link
+                    to={`/edit-media-coverage/${item._id}`}
+                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                  >
+                    Edit
+                  </Link>
 
-                            <button
-                              onClick={() =>
-                                handleDelete(item._id)
-                              }
-                              className="rounded-lg bg-red-500 px-3 py-2 text-sm text-white hover:bg-red-600"
-                            >
-                              Delete
-                            </button>
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
 
-                          </div>
-                        </TableCell>
+                </div>
 
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center">
-                        No Media Coverage Found
-                      </TableCell>
-                    </TableRow>
-                  )}
+              </TableCell>
 
-                </TableBody>
+            </TableRow>
 
-              </Table>
+          ))
 
-            </div>
+        ) : (
 
-          </div>
+          <TableRow>
+
+            <TableCell
+              colSpan={5}
+              className="py-10 text-center text-gray-500"
+            >
+              No Media Coverage Found
+            </TableCell>
+
+          </TableRow>
+
+        )}
+
+      </TableBody>
+
+    </Table>
+
+  </div>
+</div>
         </ComponentCard>
       </div>
     </>

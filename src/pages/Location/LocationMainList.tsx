@@ -117,133 +117,142 @@ export default function LocationMainList() {
 
       <div className="space-y-6">
         <ComponentCard title="Location Main List">
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
+  <div className="overflow-x-auto">
 
-            <div className="max-w-full overflow-x-auto">
+    <Table>
 
-              <Table>
+      <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+        <TableRow>
 
-                <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Sr No
+          </TableCell>
 
-                  <TableRow>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-left text-sm font-semibold"
+          >
+            Location
+          </TableCell>
 
-                    <TableCell isHeader className="px-5 py-3">
-                      Sr No
-                    </TableCell>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-left text-sm font-semibold"
+          >
+            Site Name
+          </TableCell>
 
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Status
+          </TableCell>
 
-                    <TableCell isHeader className="px-5 py-3">
-                      Location
-                    </TableCell>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Action
+          </TableCell>
 
-                    <TableCell isHeader className="px-5 py-3">
-                      Site Name
-                    </TableCell>
+        </TableRow>
+      </TableHeader>
 
-                    <TableCell isHeader className="px-5 py-3">
-                      Status
-                    </TableCell>
+      <TableBody>
 
-                    <TableCell isHeader className="px-5 py-3">
-                      Action
-                    </TableCell>
+        {loading ? (
 
-                  </TableRow>
+          <TableRow>
+            <TableCell
+              colSpan={5}
+              className="py-10 text-center text-gray-500"
+            >
+              Loading...
+            </TableCell>
+          </TableRow>
 
-                </TableHeader>
+        ) : locations.length > 0 ? (
 
-                <TableBody>
+          locations.map((item, index) => (
 
-                  {loading ? (
-                    <TableRow>
-                      <TableCell className="px-5 py-4">
-                        Loading...
-                      </TableCell>
-                    </TableRow>
-                  ) : locations.length > 0 ? (
+            <TableRow
+              key={item._id}
+              className="border-b border-gray-100 transition-all duration-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
+            >
 
-                    locations.map((item, index) => (
+              <TableCell className="px-6 py-4 text-center font-medium">
+                {index + 1}
+              </TableCell>
 
-                      <TableRow key={item._id}>
+              <TableCell className="px-6 py-4 font-medium">
+                {item.locationId?.locationName || "-"}
+              </TableCell>
 
-                        <TableCell className="px-5 py-4">
-                          {index + 1}
-                        </TableCell>
+              <TableCell className="px-6 py-4">
+                {item.siteName}
+              </TableCell>
 
-                      
+              <TableCell className="px-6 py-4 text-center">
+                <button onClick={() => handleStatus(item._id)}>
+                  <Badge
+                    size="sm"
+                    color={item.status === 1 ? "success" : "error"}
+                  >
+                    {item.status === 1 ? "Active" : "Inactive"}
+                  </Badge>
+                </button>
+              </TableCell>
 
-                        <TableCell className="px-5 py-4">
-                          {item.locationId?.locationName}
-                        </TableCell>
+              <TableCell className="px-6 py-4">
+                <div className="flex items-center justify-center gap-2">
 
-                        <TableCell className="px-5 py-4">
-                          {item.siteName}
-                        </TableCell>
+                  <Link
+                    to={`/edit-location/${item._id}`}
+                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                  >
+                    Edit
+                  </Link>
 
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
 
-                        <TableCell className="px-5 py-4">
-                          <button
-                            onClick={() =>
-                              handleStatus(item._id)
-                            }
-                          >
-                            <Badge
-                              size="sm"
-                              color={
-                                item.status === 1
-                                  ? "success"
-                                  : "error"
-                              }
-                            >
-                              {item.status === 1
-                                ? "Active"
-                                : "Inactive"}
-                            </Badge>
-                          </button>
-                        </TableCell>
+                </div>
+              </TableCell>
 
-                        <TableCell className="px-5 py-4">
-                          <div className="flex gap-2">
+            </TableRow>
 
-                            <Link
-                              to={`/edit-location/${item._id}`}
-                              className="rounded-lg bg-blue-500 px-3 py-2 text-white text-sm hover:bg-blue-600"
-                            >
-                              Edit
-                            </Link>
+          ))
 
-                            <button
-                              onClick={() =>
-                                handleDelete(item._id)
-                              }
-                              className="rounded-lg bg-red-500 px-3 py-2 text-white text-sm hover:bg-red-600"
-                            >
-                              Delete
-                            </button>
+        ) : (
 
-                          </div>
-                        </TableCell>
+          <TableRow>
 
-                      </TableRow>
+            <TableCell
+              colSpan={5}
+              className="py-10 text-center text-gray-500"
+            >
+              No Record Found
+            </TableCell>
 
-                    ))
+          </TableRow>
 
-                  ) : (
+        )}
 
-                    <TableRow>
-                      <TableCell className="px-5 py-4 text-center">
-                        No Record Found
-                      </TableCell>
-                    </TableRow>
+      </TableBody>
 
-                  )}
+    </Table>
 
-                </TableBody>
-
-              </Table>
-
-            </div>
-          </div>
+  </div>
+</div>
         </ComponentCard>
       </div>
     </>

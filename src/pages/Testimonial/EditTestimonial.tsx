@@ -7,7 +7,7 @@ import {
   getTestimonialByIdApi,
   updateTestimonialApi,
 } from "../../api/testimonialApi";
-
+import { Link } from "react-router";
 export default function EditTestimonial() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ export default function EditTestimonial() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData({
       ...formData,
@@ -63,8 +63,7 @@ export default function EditTestimonial() {
     if (!formData.name.trim()) err.name = "Name is required";
     if (!formData.designation.trim())
       err.designation = "Designation is required";
-    if (!formData.briefIntro.trim())
-      err.briefIntro = "Brief Intro is required";
+    if (!formData.briefIntro.trim()) err.briefIntro = "Brief Intro is required";
 
     setErrors(err);
 
@@ -88,9 +87,7 @@ export default function EditTestimonial() {
         navigate("/list-Testimonial");
       }
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || "Something went wrong"
-      );
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -104,7 +101,6 @@ export default function EditTestimonial() {
             <div className="p-6">
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 gap-6">
-
                   <div>
                     <label>Name</label>
 
@@ -133,9 +129,7 @@ export default function EditTestimonial() {
                     />
 
                     {errors.designation && (
-                      <p className="text-red-500">
-                        {errors.designation}
-                      </p>
+                      <p className="text-red-500">{errors.designation}</p>
                     )}
                   </div>
 
@@ -157,9 +151,7 @@ export default function EditTestimonial() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={(e) =>
-                        setImage(e.target.files?.[0] || null)
-                      }
+                      onChange={(e) => setImage(e.target.files?.[0] || null)}
                     />
                   </div>
 
@@ -175,19 +167,25 @@ export default function EditTestimonial() {
                     />
 
                     {errors.briefIntro && (
-                      <p className="text-red-500">
-                        {errors.briefIntro}
-                      </p>
+                      <p className="text-red-500">{errors.briefIntro}</p>
                     )}
                   </div>
 
-                  <button
-                    type="submit"
-                    className="rounded-lg bg-brand-500 px-4 py-3 text-white"
-                  >
-                    Update Testimonial
-                  </button>
+                  <div className="mt-6 flex justify-end gap-3">
+                    <Link
+                      to="/list-Testimonial"
+                      className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                    >
+                      Back
+                    </Link>
 
+                    <button
+                      type="submit"
+                      className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    >
+                      Update
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>

@@ -73,9 +73,7 @@ export default function BlogList() {
         fetchBlogs();
       }
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || "Delete failed"
-      );
+      toast.error(error.response?.data?.message || "Delete failed");
     }
   };
 
@@ -85,111 +83,104 @@ export default function BlogList() {
 
       <div className="space-y-6">
         <ComponentCard title="Blog List">
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-            <div className="max-w-full overflow-x-auto">
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <div className="overflow-x-auto">
               <Table>
-                <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+                <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
                   <TableRow>
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
+                      className="px-6 py-4 text-center text-sm font-semibold"
                     >
                       Sr No
                     </TableCell>
 
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
+                      className="px-6 py-4 text-left text-sm font-semibold"
                     >
-                      Category Name
+                      Category
                     </TableCell>
 
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
+                      className="px-6 py-4 text-left text-sm font-semibold"
                     >
-                      Title
+                      Blog Title
                     </TableCell>
 
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
+                      className="px-6 py-4 text-center text-sm font-semibold"
                     >
                       Status
                     </TableCell>
 
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
+                      className="px-6 py-4 text-center text-sm font-semibold"
                     >
                       Action
                     </TableCell>
                   </TableRow>
                 </TableHeader>
 
-                <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                <TableBody>
                   {loading ? (
                     <TableRow>
-                      <TableCell className="px-5 py-4">
+                      <TableCell
+                        colSpan={5}
+                        className="py-10 text-center text-gray-500"
+                      >
                         Loading...
                       </TableCell>
                     </TableRow>
                   ) : blogs.length > 0 ? (
                     blogs.map((item, index) => (
-                      <TableRow key={item._id}>
-                        <TableCell className="px-5 py-4 text-start">
+                      <TableRow
+                        key={item._id}
+                        className="border-b border-gray-100 transition-all duration-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
+                      >
+                        <TableCell className="px-6 py-4 text-center font-medium">
                           {index + 1}
                         </TableCell>
 
-                        <TableCell className="px-5 py-4 text-start">
-                          <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                            {item.categoryId?.categoryName}
-                          </span>
+                        <TableCell className="px-6 py-4 font-medium">
+                          {item.categoryId?.categoryName}
                         </TableCell>
 
-                        <TableCell className="px-5 py-4 text-start">
-                          <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                            {item.title}
-                          </span>
+                        <TableCell className="px-6 py-4 max-w-md">
+                          <p className="truncate font-medium">{item.title}</p>
                         </TableCell>
 
-                        <TableCell className="px-5 py-4 text-start">
+                        <TableCell className="px-6 py-4 text-center">
                           <Badge
                             size="sm"
-                            color={
-                              item.status === 1
-                                ? "success"
-                                : "error"
-                            }
+                            color={item.status === 1 ? "success" : "error"}
                           >
-                            {item.status === 1
-                              ? "Active"
-                              : "Inactive"}
+                            {item.status === 1 ? "Active" : "Inactive"}
                           </Badge>
                         </TableCell>
 
-                        <TableCell className="px-5 py-4 text-start">
-                          <div className="flex gap-2">
+                        <TableCell className="px-6 py-4">
+                          <div className="flex items-center justify-center gap-2 flex-wrap">
                             <Link
                               to={`/edit-blog/${item._id}`}
-                              className="inline-flex items-center rounded-lg bg-blue-500 px-3 py-2 text-sm text-white hover:bg-blue-600"
+                              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                             >
                               Edit
                             </Link>
 
                             <button
-                              onClick={() =>
-                                handleDelete(item._id)
-                              }
-                              className="inline-flex items-center rounded-lg bg-red-500 px-3 py-2 text-sm text-white hover:bg-red-600"
+                              onClick={() => handleDelete(item._id)}
+                              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
                             >
                               Delete
                             </button>
 
-
-                             <Link
+                            <Link
                               to={`/seo/${item._id}`}
-                              className="inline-flex items-center rounded-lg bg-blue-500 px-3 py-2 text-sm text-white hover:bg-blue-600"
+                              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700"
                             >
                               SEO
                             </Link>
@@ -199,7 +190,10 @@ export default function BlogList() {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell className="px-5 py-4 text-center">
+                      <TableCell
+                        colSpan={5}
+                        className="py-10 text-center text-gray-500"
+                      >
                         No Blog Found
                       </TableCell>
                     </TableRow>

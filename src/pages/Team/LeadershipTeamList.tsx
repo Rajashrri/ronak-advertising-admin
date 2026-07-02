@@ -106,179 +106,150 @@ export default function LeadershipTeamList() {
       <div className="space-y-6">
         <ComponentCard title="Leadership Team List">
 
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
+  <div className="overflow-x-auto">
 
-            <div className="max-w-full overflow-x-auto">
+    <Table>
 
-              <Table>
+      <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
 
-                <TableHeader>
+        <TableRow>
 
-                  <TableRow>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Sr No
+          </TableCell>
 
-                    <TableCell isHeader>
-                      Sr No
-                    </TableCell>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Image
+          </TableCell>
 
-                    <TableCell isHeader>
-                      Image
-                    </TableCell>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-left text-sm font-semibold"
+          >
+            Name
+          </TableCell>
 
-                    <TableCell isHeader>
-                      Name
-                    </TableCell>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Status
+          </TableCell>
 
-                    <TableCell isHeader>
-                      Designation
-                    </TableCell>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Action
+          </TableCell>
 
-                    <TableCell isHeader>
-                      Experience
-                    </TableCell>
+        </TableRow>
 
-                    <TableCell isHeader>
-                      LinkedIn
-                    </TableCell>
+      </TableHeader>
 
-                    <TableCell isHeader>
-                      Status
-                    </TableCell>
+      <TableBody>
 
-                    <TableCell isHeader>
-                      Action
-                    </TableCell>
+        {loading ? (
 
-                  </TableRow>
+          <TableRow>
 
-                </TableHeader>
+            <TableCell
+              colSpan={5}
+              className="py-10 text-center text-gray-500"
+            >
+              Loading...
+            </TableCell>
 
-                <TableBody>
+          </TableRow>
 
-                  {loading ? (
+        ) : leadership.length > 0 ? (
 
-                    <TableRow>
+          leadership.map((item, index) => (
 
-                      <TableCell className="px-5 py-4">
-                        Loading...
-                      </TableCell>
+            <TableRow
+              key={item._id}
+              className="border-b border-gray-100 transition-all duration-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
+            >
 
-                    </TableRow>
+              <TableCell className="px-6 py-4 text-center font-medium">
+                {index + 1}
+              </TableCell>
 
-                  ) : leadership.length > 0 ? (
+              <TableCell className="px-6 py-4 text-center">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="mx-auto h-14 w-14 rounded-lg border border-gray-200 object-cover"
+                />
+              </TableCell>
 
-                    leadership.map((item, index) => (
+              <TableCell className="px-6 py-4 font-medium">
+                {item.name}
+              </TableCell>
 
-                      <TableRow key={item._id}>
+              <TableCell className="px-6 py-4 text-center">
+                <button onClick={() => handleStatus(item._id)}>
+                  <Badge
+                    size="sm"
+                    color={item.status === 1 ? "success" : "error"}
+                  >
+                    {item.status === 1 ? "Active" : "Inactive"}
+                  </Badge>
+                </button>
+              </TableCell>
 
-                        <TableCell className="px-5 py-4">
-                          {index + 1}
-                        </TableCell>
+              <TableCell className="px-6 py-4">
+                <div className="flex items-center justify-center gap-2">
 
-                        <TableCell className="px-5 py-4">
+                  <Link
+                    to={`/edit-leadership-team/${item._id}`}
+                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                  >
+                    Edit
+                  </Link>
 
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="h-14 w-14 rounded-lg object-cover border"
-                          />
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
 
-                        </TableCell>
+                </div>
+              </TableCell>
 
-                        <TableCell className="px-5 py-4">
-                          {item.name}
-                        </TableCell>
+            </TableRow>
 
-                        <TableCell className="px-5 py-4">
-                          {item.designation}
-                        </TableCell>
+          ))
 
-                        <TableCell className="px-5 py-4">
-                          {item.experience}
-                        </TableCell>
+        ) : (
 
-                        <TableCell className="px-5 py-4">
+          <TableRow>
 
-                          <a
-                            href={item.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 underline"
-                          >
-                            View Profile
-                          </a>
+            <TableCell
+              colSpan={5}
+              className="py-10 text-center text-gray-500"
+            >
+              No Record Found
+            </TableCell>
 
-                        </TableCell>
+          </TableRow>
 
-                        <TableCell className="px-5 py-4">
+        )}
 
-                          <button
-                            onClick={() =>
-                              handleStatus(item._id)
-                            }
-                          >
-                            <Badge
-                              size="sm"
-                              color={
-                                item.status === 1
-                                  ? "success"
-                                  : "error"
-                              }
-                            >
-                              {item.status === 1
-                                ? "Active"
-                                : "Inactive"}
-                            </Badge>
-                          </button>
+      </TableBody>
 
-                        </TableCell>
+    </Table>
 
-                        <TableCell className="px-5 py-4">
-
-                          <div className="flex gap-2">
-
-                            <Link
-                              to={`/edit-leadership-team/${item._id}`}
-                              className="rounded-lg bg-blue-500 px-3 py-2 text-sm text-white hover:bg-blue-600"
-                            >
-                              Edit
-                            </Link>
-
-                            <button
-                              onClick={() =>
-                                handleDelete(item._id)
-                              }
-                              className="rounded-lg bg-red-500 px-3 py-2 text-sm text-white hover:bg-red-600"
-                            >
-                              Delete
-                            </button>
-
-                          </div>
-
-                        </TableCell>
-
-                      </TableRow>
-
-                    ))
-
-                  ) : (
-
-                    <TableRow>
-
-                      <TableCell className="px-5 py-4 text-center">
-                        No Record Found
-                      </TableCell>
-
-                    </TableRow>
-
-                  )}
-
-                </TableBody>
-
-              </Table>
-
-            </div>
-
-          </div>
+  </div>
+</div>
 
         </ComponentCard>
       </div>

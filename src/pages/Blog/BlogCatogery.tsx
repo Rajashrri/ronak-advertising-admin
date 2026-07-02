@@ -45,132 +45,127 @@ export default function BlogCatogery() {
     fetchCategories();
   }, []);
 
-const handleDelete = async (id: string) => {
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, delete it!",
-  });
+  const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
 
-  if (!result.isConfirmed) {
-    return;
-  }
-
-  try {
-    const response = await deleteCategoryApi(id);
-
-    if (response.data.success) {
-      toast.success(response.data.message);
-
-      fetchCategories();
+    if (!result.isConfirmed) {
+      return;
     }
-  } catch (error: any) {
-    toast.error(
-      error.response?.data?.message || "Delete failed"
-    );
-  }
-};
+
+    try {
+      const response = await deleteCategoryApi(id);
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+
+        fetchCategories();
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Delete failed");
+    }
+  };
   return (
     <>
       <PageBreadcrumb pageTitle="Blog Category" />
 
       <div className="space-y-6">
         <ComponentCard title="Blog Category">
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-            <div className="max-w-full overflow-x-auto">
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <div className="overflow-x-auto">
               <Table>
-                {/* Table Header */}
-                <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+                <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
                   <TableRow>
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
+                      className="px-6 py-4 text-center text-sm font-semibold"
                     >
                       Sr No
                     </TableCell>
 
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
+                      className="px-6 py-4 text-left text-sm font-semibold"
                     >
-                      Project Name
+                      Category Name
                     </TableCell>
 
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
+                      className="px-6 py-4 text-left text-sm font-semibold"
                     >
                       Slug
                     </TableCell>
 
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
+                      className="px-6 py-4 text-center text-sm font-semibold"
                     >
                       Status
                     </TableCell>
 
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
+                      className="px-6 py-4 text-center text-sm font-semibold"
                     >
                       Action
                     </TableCell>
                   </TableRow>
                 </TableHeader>
 
-                {/* Table Body */}
-                <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                <TableBody>
                   {loading ? (
                     <TableRow>
-                      <TableCell className="px-5 py-4">Loading...</TableCell>
+                      <TableCell
+                        colSpan={5}
+                        className="py-10 text-center text-gray-500"
+                      >
+                        Loading...
+                      </TableCell>
                     </TableRow>
                   ) : categories.length > 0 ? (
                     categories.map((item, index) => (
-                      <TableRow key={item._id}>
-                        {/* SR NO */}
-                        <TableCell className="px-5 py-4 text-start">
+                      <TableRow
+                        key={item._id}
+                        className="border-b border-gray-100 transition-all duration-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
+                      >
+                        <TableCell className="px-6 py-4 text-center font-medium">
                           {index + 1}
                         </TableCell>
 
-                        {/* CATEGORY NAME */}
-                        <TableCell className="px-5 py-4 text-start">
-                          <div>
-                            <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                              {item.categoryName}
-                            </span>
-                          </div>
+                        <TableCell className="px-6 py-4 font-medium">
+                          {item.categoryName}
                         </TableCell>
 
-                        {/* SLUG */}
-                        <TableCell className="px-5 py-4 text-start text-theme-sm text-gray-500">
+                        <TableCell className="px-6 py-4 text-gray-600">
                           {item.slug}
                         </TableCell>
 
-                        {/* STATUS */}
-                        <TableCell className="px-5 py-4 text-start">
+                        <TableCell className="px-6 py-4 text-center">
                           <Badge size="sm" color="success">
                             Active
                           </Badge>
                         </TableCell>
 
-                        {/* ACTION */}
-                        <TableCell className="px-5 py-4 text-start">
-                          <div className="flex gap-2">
+                        <TableCell className="px-6 py-4">
+                          <div className="flex items-center justify-center gap-2">
                             <Link
                               to={`/edit-category/${item._id}`}
-                              className="inline-flex items-center rounded-lg bg-blue-500 px-3 py-2 text-sm text-white hover:bg-blue-600"
+                              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                             >
                               Edit
                             </Link>
 
                             <button
                               onClick={() => handleDelete(item._id)}
-                              className="inline-flex items-center rounded-lg bg-red-500 px-3 py-2 text-sm text-white hover:bg-red-600"
+                              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
                             >
                               Delete
                             </button>
@@ -180,7 +175,10 @@ const handleDelete = async (id: string) => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell className="px-5 py-4 text-center">
+                      <TableCell
+                        colSpan={5}
+                        className="py-10 text-center text-gray-500"
+                      >
                         No Category Found
                       </TableCell>
                     </TableRow>
