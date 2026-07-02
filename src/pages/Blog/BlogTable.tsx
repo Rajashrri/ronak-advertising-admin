@@ -15,7 +15,11 @@ import {
 
 import Badge from "../../components/ui/badge/Badge";
 
-import { getBlogsApi, deleteBlogApi } from "../../api/blogApi";
+import {
+  getBlogsApi,
+  deleteBlogApi,
+  changeFeaturedApi,
+} from "../../api/blogApi";
 
 interface Blog {
   _id: string;
@@ -24,12 +28,24 @@ interface Blog {
     categoryName: string;
   };
   status: number;
+  featured: number;
 }
 
 export default function BlogList() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(false);
+  const handleFeatured = async (id: string) => {
+    try {
+      const response = await changeFeaturedApi(id);
 
+      if (response.data.success) {
+        toast.success(response.data.message);
+        fetchBlogs();
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Featured update failed");
+    }
+  };
   const fetchBlogs = async () => {
     try {
       setLoading(true);
@@ -115,7 +131,12 @@ export default function BlogList() {
                     >
                       Status
                     </TableCell>
-
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Featured
+                    </TableCell>
                     <TableCell
                       isHeader
                       className="px-6 py-4 text-center text-sm font-semibold"
@@ -161,7 +182,34 @@ export default function BlogList() {
                             {item.status === 1 ? "Active" : "Inactive"}
                           </Badge>
                         </TableCell>
+                        <TableCell className="px-6 py-4 text-center">
+                          <button
+                            onClick={() => handleFeatured(item._id)}
+                            className={`relative inline-flex h-5 w-10 items-center rounded-full transition-all duration-300 ${
+                              item.featured === 1
+                                ? "bg-green-500"
+                                : "bg-gray-300"
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${
+                                item.featured === 1
+                                  ? "translate-x-5"
+                                  : "translate-x-0.5"
+                              }`}
+                            />
 
+                            <span
+                              className={`absolute text-[8px] font-semibold ${
+                                item.featured === 1
+                                  ? "left-1 text-white"
+                                  : "right-1 text-gray-700"
+                              }`}
+                            >
+                              {item.featured === 1 ? "ON" : "OFF"}
+                            </span>
+                          </button>
+                        </TableCell>
                         <TableCell className="px-6 py-4">
                           <div className="flex items-center justify-center gap-2 flex-wrap">
                             <Link

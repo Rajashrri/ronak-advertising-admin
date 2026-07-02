@@ -11,6 +11,11 @@ const frontApi = axios.create({
 export const getCategoriesApi = async () => {
   return frontApi.get("/list");
 };
+
+export const changeFeaturedApi = async (id) => {
+  return frontApi.patch(`/change-featured/${id}`);
+};
+
 export const addBlogApi = async (data) => {
   return frontApi.post("/add-blog", data, {
     headers: {
