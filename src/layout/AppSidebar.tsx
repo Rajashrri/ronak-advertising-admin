@@ -29,7 +29,7 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-     path: "/",
+    path: "/",
     // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
   },
 
@@ -40,16 +40,15 @@ const navItems: NavItem[] = [
       { name: "Add Blog Category", path: "/add-blog-catogery", pro: false },
       { name: "List Blog Category", path: "/blog-catogery", pro: false },
       { name: "Add Blog", path: "/add-blog", pro: false },
-      { name: "List Blog", path: "/blog", pro: false }
+      { name: "List Blog", path: "/blog", pro: false },
     ],
   },
-{
+  {
     name: "Testimonial",
     icon: <TableIcon />,
     subItems: [
-   
       { name: "Add Testimonial", path: "/add-testimonial", pro: false },
-      { name: "List Testimonial", path: "/list-Testimonial", pro: false }
+      { name: "List Testimonial", path: "/list-Testimonial", pro: false },
     ],
   },
 
@@ -57,31 +56,30 @@ const navItems: NavItem[] = [
     name: "Clientele",
     icon: <TableIcon />,
     subItems: [
-   
       { name: "Add Clientele", path: "/add-clientele", pro: false },
-      { name: "List Clientele", path: "/list-clientele", pro: false }
+      { name: "List Clientele", path: "/list-clientele", pro: false },
     ],
   },
 
-  
   {
     name: "Team",
     icon: <TableIcon />,
     subItems: [
-   
       { name: "Add Leadership Team", path: "/add-leadershipteam", pro: false },
-      { name: "List Leadership Team", path: "/list-leadershipteam", pro: false },
+      {
+        name: "List Leadership Team",
+        path: "/list-leadershipteam",
+        pro: false,
+      },
       { name: "Add Core Team", path: "/add-coreteam", pro: false },
       { name: "List Core Team", path: "/list-coreteam", pro: false },
     ],
   },
 
-
-    {
+  {
     name: "Media",
     icon: <TableIcon />,
     subItems: [
-   
       { name: "Add Media Coverage", path: "/add-mediacoverage", pro: false },
       { name: "List Media Coverage", path: "/list-mediacoverage", pro: false },
       { name: "Add Articles", path: "/add-article", pro: false },
@@ -89,28 +87,28 @@ const navItems: NavItem[] = [
     ],
   },
 
-
-     {
+  {
     name: "Location",
     icon: <TableIcon />,
     subItems: [
-   
       { name: "Add Location Master", path: "/add-locationmaster", pro: false },
-      { name: "List Location Master", path: "/list-locationmaster", pro: false },
+      {
+        name: "List Location Master",
+        path: "/list-locationmaster",
+        pro: false,
+      },
       { name: "Add Location", path: "/add-location", pro: false },
       { name: "List Location", path: "/list-location", pro: false },
     ],
   },
-   {
+  {
     name: "List",
     icon: <TableIcon />,
     subItems: [
       { name: "Contact List", path: "/contact-list", pro: false },
-            { name: "Career List", path: "/career-list", pro: false },
-
+      { name: "Career List", path: "/career-list", pro: false },
     ],
   },
- 
 ];
 
 const othersItems: NavItem[] = [
@@ -153,14 +151,89 @@ const AppSidebar: React.FC = () => {
     index: number;
   } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-    {}
+    {},
   );
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // const isActive = (path: string) => location.pathname === path;
   const isActive = useCallback(
-    (path: string) => location.pathname === path,
-    [location.pathname]
+    (path: string) => {
+      const currentPath = location.pathname;
+
+      switch (path) {
+        // Blog
+        case "/blog":
+          return (
+            currentPath === "/blog" ||
+            currentPath.startsWith("/edit-blog") ||
+            currentPath.startsWith("/seo/")
+          );
+
+        case "/blog-catogery":
+          return (
+            currentPath === "/blog-catogery" ||
+            currentPath.startsWith("/edit-category")
+          );
+        // Testimonial
+        case "/list-Testimonial":
+          return (
+            currentPath.startsWith("/list-Testimonial") ||
+            currentPath.startsWith("/edit-testimonial")
+          );
+
+        // Clientele
+        case "/list-clientele":
+          return (
+            currentPath.startsWith("/list-clientele") ||
+            currentPath.startsWith("/edit-clientele")
+          );
+
+        // Leadership
+        case "/list-leadershipteam":
+          return (
+            currentPath.startsWith("/list-leadershipteam") ||
+            currentPath.startsWith("/edit-leadership-team")
+          );
+
+        // Core Team
+        case "/list-coreteam":
+          return (
+            currentPath.startsWith("/list-coreteam") ||
+            currentPath.startsWith("/edit-core-team")
+          );
+
+        // Media Coverage
+        case "/list-mediacoverage":
+          return (
+            currentPath.startsWith("/list-mediacoverage") ||
+            currentPath.startsWith("/edit-media-coverage")
+          );
+
+        // Articles
+        case "/list-article":
+          return (
+            currentPath.startsWith("/list-article") ||
+            currentPath.startsWith("/edit-article")
+          );
+
+        // Location Master
+        case "/list-locationmaster":
+          return (
+            /^\/list-locationmaster\/?$/.test(currentPath) ||
+            currentPath.startsWith("/edit-locationmaster")
+          );
+
+        // Location
+        case "/list-location":
+          return (
+            /^\/list-location\/?$/.test(currentPath) ||
+            currentPath.startsWith("/edit-location/")
+          );
+        default:
+          return currentPath === path;
+      }
+    },
+    [location.pathname],
   );
 
   useEffect(() => {
@@ -342,8 +415,8 @@ const AppSidebar: React.FC = () => {
           isExpanded || isMobileOpen
             ? "w-[290px]"
             : isHovered
-            ? "w-[290px]"
-            : "w-[90px]"
+              ? "w-[290px]"
+              : "w-[90px]"
         }
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}
@@ -420,7 +493,6 @@ const AppSidebar: React.FC = () => {
             </div> */}
           </div>
         </nav>
-  
       </div>
     </aside>
   );
