@@ -34,3 +34,8 @@ export const deleteCategoryApi = async (id) => {
   return frontApi.delete(`/delete/${id}`);
 };
 
+export const changeCategoryStatusApi = async (id) => {
+  return frontApi.patch(
+    `/change-status/${id}`
+  );
+};

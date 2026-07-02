@@ -54,3 +54,7 @@ export const getSeoByIdApi = (id) => {
 export const updateSeoApi = (id, data) => {
   return frontApi.put(`/blog-updateseo/${id}`, data);
 };
+
+export const changeBlogStatusApi = async (id) => {
+  return frontApi.patch(`/change-status/${id}`);
+};

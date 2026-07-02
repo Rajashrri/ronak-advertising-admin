@@ -19,6 +19,8 @@ import {
   getBlogsApi,
   deleteBlogApi,
   changeFeaturedApi,
+    changeBlogStatusApi,
+
 } from "../../api/blogApi";
 
 interface Blog {
@@ -46,6 +48,21 @@ export default function BlogList() {
       toast.error(error.response?.data?.message || "Featured update failed");
     }
   };
+
+  const handleStatus = async (id: string) => {
+  try {
+    const response = await changeBlogStatusApi(id);
+
+    if (response.data.success) {
+      toast.success(response.data.message);
+      fetchBlogs();
+    }
+  } catch (error: any) {
+    toast.error(
+      error.response?.data?.message || "Status update failed"
+    );
+  }
+};
   const fetchBlogs = async () => {
     try {
       setLoading(true);
@@ -174,14 +191,32 @@ export default function BlogList() {
                           <p className="truncate font-medium">{item.title}</p>
                         </TableCell>
 
-                        <TableCell className="px-6 py-4 text-center">
-                          <Badge
-                            size="sm"
-                            color={item.status === 1 ? "success" : "error"}
-                          >
-                            {item.status === 1 ? "Active" : "Inactive"}
-                          </Badge>
-                        </TableCell>
+                   <TableCell className="px-6 py-4 text-center">
+  <button
+    onClick={() => handleStatus(item._id)}
+    className={`relative inline-flex h-5 w-10 items-center rounded-full transition-all duration-300 ${
+      item.status === 1 ? "bg-green-500" : "bg-gray-300"
+    }`}
+  >
+    <span
+      className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${
+        item.status === 1
+          ? "translate-x-5"
+          : "translate-x-0.5"
+      }`}
+    />
+
+    <span
+      className={`absolute text-[8px] font-semibold ${
+        item.status === 1
+          ? "left-1 text-white"
+          : "right-1 text-gray-700"
+      }`}
+    >
+      {item.status === 1 ? "ON" : "OFF"}
+    </span>
+  </button>
+</TableCell>
                         <TableCell className="px-6 py-4 text-center">
                           <button
                             onClick={() => handleFeatured(item._id)}
