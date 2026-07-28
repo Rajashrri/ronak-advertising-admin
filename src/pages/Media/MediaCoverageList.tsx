@@ -20,6 +20,7 @@ import {
   getMediaCoverageApi,
   deleteMediaCoverageApi,
   changeMediaCoverageStatusApi,
+  changeMediaCoverageFeaturedApi
 } from "../../api/mediaCoverageApi";
 
 interface MediaCoverage {
@@ -29,6 +30,7 @@ interface MediaCoverage {
   publishedDate: string;
   sourceName: string;
   status: number;
+    featured: number;
 }
 
 export default function MediaCoverageList() {
@@ -55,7 +57,18 @@ export default function MediaCoverageList() {
   useEffect(() => {
     fetchData();
   }, []);
+const handleFeatured = async (id: string) => {
+  try {
+    const res = await changeMediaCoverageFeaturedApi(id);
 
+    if (res.data.success) {
+      toast.success(res.data.message);
+      fetchData();
+    }
+  } catch (error) {
+    toast.error("Featured update failed");
+  }
+};
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -138,7 +151,12 @@ export default function MediaCoverageList() {
           >
             Status
           </TableCell>
-
+<TableCell
+  isHeader
+  className="px-6 py-4 text-center text-sm font-semibold"
+>
+  Featured
+</TableCell>
           <TableCell
             isHeader
             className="px-6 py-4 text-center text-sm font-semibold"
@@ -195,7 +213,16 @@ export default function MediaCoverageList() {
                   </Badge>
                 </button>
               </TableCell>
-
+<TableCell className="px-6 py-4 text-center">
+  <button onClick={() => handleFeatured(item._id)}>
+    <Badge
+      size="sm"
+      color={item.featured === 1 ? "success" : "light"}
+    >
+      {item.featured === 1 ? "Yes" : "No"}
+    </Badge>
+  </button>
+</TableCell>
               <TableCell className="px-6 py-4">
 
                 <div className="flex items-center justify-center gap-2">

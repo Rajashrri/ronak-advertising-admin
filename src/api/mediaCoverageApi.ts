@@ -37,7 +37,13 @@ export const getMediaCoverageByIdApi = async (
     `/media-coverage-detail/${id}`
   );
 };
-
+export const changeMediaCoverageFeaturedApi = async (
+  id: string
+) => {
+  return mediaCoverageApi.patch(
+    `/change-featured/${id}`
+  );
+};
 // Update
 export const updateMediaCoverageApi = async (
   id: string,
