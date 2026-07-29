@@ -14,16 +14,17 @@ import {
 
 import Badge from "../../components/ui/badge/Badge";
 
-import { getCategoriesApi, deleteCategoryApi,  changeCategoryStatusApi,
- } from "../../api/blogCategoryApi";
+import {
+  getCategoriesApi,
+  deleteCategoryApi,
+  changeCategoryStatusApi,
+} from "../../api/blogCategoryApi";
 
- 
 interface Category {
   _id: string;
   categoryName: string;
   slug: string;
-    status: number; // <-- Add this
-
+  status: number; // <-- Add this
 }
 
 export default function BlogCatogery() {
@@ -50,22 +51,18 @@ export default function BlogCatogery() {
     fetchCategories();
   }, []);
 
-
   const handleStatus = async (id: string) => {
-  try {
-    const response = await changeCategoryStatusApi(id);
+    try {
+      const response = await changeCategoryStatusApi(id);
 
-    if (response.data.success) {
-      toast.success(response.data.message);
-      fetchCategories();
+      if (response.data.success) {
+        toast.success(response.data.message);
+        fetchCategories();
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Status update failed");
     }
-  } catch (error: any) {
-    toast.error(
-      error.response?.data?.message ||
-        "Status update failed"
-    );
-  }
-};
+  };
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -169,22 +166,22 @@ export default function BlogCatogery() {
                           {item.slug}
                         </TableCell>
 
-                     <TableCell className="px-6 py-4 text-center">
-  <button
-    onClick={() => handleStatus(item._id)}
-    className={`relative inline-flex h-5 w-10 items-center rounded-full transition ${
-      item.status === 1 ? "bg-green-500" : "bg-gray-300"
-    }`}
-  >
-    <span
-      className={`inline-block h-4 w-4 rounded-full bg-white shadow transform transition ${
-        item.status === 1
-          ? "translate-x-5"
-          : "translate-x-0.5"
-      }`}
-    />
-  </button>
-</TableCell>
+                        <TableCell className="px-6 py-4 text-center">
+                          <button
+                            onClick={() => handleStatus(item._id)}
+                            className={`relative inline-flex h-5 w-10 items-center rounded-full transition ${
+                              item.status === 1 ? "bg-green-500" : "bg-gray-300"
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 rounded-full bg-white shadow transform transition ${
+                                item.status === 1
+                                  ? "translate-x-5"
+                                  : "translate-x-0.5"
+                              }`}
+                            />
+                          </button>
+                        </TableCell>
 
                         <TableCell className="px-6 py-4">
                           <div className="flex items-center justify-center gap-2">
