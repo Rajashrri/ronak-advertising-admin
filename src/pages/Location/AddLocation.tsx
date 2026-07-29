@@ -13,9 +13,7 @@ export default function AddLocation() {
 
   const [errors, setErrors] = useState<any>({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -65,10 +63,7 @@ export default function AddLocation() {
         setErrors({});
       }
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          "Something went wrong"
-      );
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -80,11 +75,8 @@ export default function AddLocation() {
         <ComponentCard title="Add Location">
           <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
             <div className="p-6">
-
               <form onSubmit={handleSubmit}>
-
                 <div className="grid grid-cols-1 gap-6">
-
                   {/* Location Name */}
 
                   <div>
@@ -117,24 +109,16 @@ export default function AddLocation() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={(e) =>
-                        setImage(
-                          e.target.files?.[0] || null
-                        )
-                      }
+                      onChange={(e) => setImage(e.target.files?.[0] || null)}
                     />
 
                     {errors.image && (
-                      <p className="text-red-500 text-sm">
-                        {errors.image}
-                      </p>
+                      <p className="text-red-500 text-sm">{errors.image}</p>
                     )}
                   </div>
 
                   {/* Button */}
-<div className="mt-6 flex justify-end gap-3">
-               
-
+                  <div className="mt-6 flex justify-end gap-3">
                     <button
                       type="submit"
                       className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
@@ -143,9 +127,7 @@ export default function AddLocation() {
                     </button>
                   </div>
                 </div>
-
               </form>
-
             </div>
           </div>
         </ComponentCard>

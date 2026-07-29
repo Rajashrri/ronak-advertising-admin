@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
+import RichTextEditor from "../../components/editor/RichTextEditor";
 
 import {
   addLocationMainApi,
@@ -62,7 +63,7 @@ export default function AddLocationMain() {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     setFormData({
       ...formData,
@@ -74,9 +75,7 @@ export default function AddLocationMain() {
   // IMAGE
   // ===========================
 
-  const handleImage = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
       setImage(e.target.files[0]);
     }
@@ -86,9 +85,7 @@ export default function AddLocationMain() {
   // GALLERY
   // ===========================
 
-  const handleGallery = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleGallery = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setGallery(Array.from(e.target.files));
     }
@@ -98,28 +95,22 @@ export default function AddLocationMain() {
   // SUBMIT
   // ===========================
 
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     let err: any = {};
 
-    if (!formData.locationId)
-      err.locationId = "Select Location";
+    if (!formData.locationId) err.locationId = "Select Location";
 
-    if (!formData.siteName.trim())
-      err.siteName = "Site Name required";
+    if (!formData.siteName.trim()) err.siteName = "Site Name required";
 
-    if (!image)
-      err.image = "Image required";
+    if (!image) err.image = "Image required";
 
     setErrors(err);
 
     if (Object.keys(err).length > 0) return;
 
     try {
-
       const data = new FormData();
 
       Object.entries(formData).forEach(([key, value]) => {
@@ -134,11 +125,9 @@ export default function AddLocationMain() {
         data.append("gallery", file);
       });
 
-      const response =
-        await addLocationMainApi(data);
+      const response = await addLocationMainApi(data);
 
       if (response.data.success) {
-
         toast.success(response.data.message);
 
         setFormData({
@@ -156,20 +145,13 @@ export default function AddLocationMain() {
         setImage(null);
         setGallery([]);
         setErrors({});
-
       }
-
     } catch (error: any) {
-
-      toast.error(
-        error.response?.data?.message ||
-          "Something went wrong"
-      );
-
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
-    return (
+  return (
     <>
       <PageBreadcrumb pageTitle="Add Location Main" />
 
@@ -177,11 +159,8 @@ export default function AddLocationMain() {
         <ComponentCard title="Add Location Main">
           <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
             <div className="p-6">
-
               <form onSubmit={handleSubmit}>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                   {/* Location */}
 
                   <div>
@@ -195,15 +174,10 @@ export default function AddLocationMain() {
                       onChange={handleChange}
                       className="h-11 w-full rounded-lg border px-4"
                     >
-                      <option value="">
-                        Select Location
-                      </option>
+                      <option value="">Select Location</option>
 
                       {locations.map((item) => (
-                        <option
-                          key={item._id}
-                          value={item._id}
-                        >
+                        <option key={item._id} value={item._id}>
                           {item.locationName}
                         </option>
                       ))}
@@ -277,13 +251,12 @@ export default function AddLocationMain() {
                   {/* Gallery */}
 
                   <div className="md:col-span-2">
-
                     <label className="mb-2 block text-sm font-medium">
                       Media Gallery Images
                     </label>
-  <p className="mb-2 text-sm font-medium text-red-500">
-    Note: You can upload multiple images (Add More).
-  </p>
+                    <p className="mb-2 text-sm font-medium text-red-500">
+                      Note: You can upload multiple images (Add More).
+                    </p>
                     <input
                       type="file"
                       multiple
@@ -292,55 +265,46 @@ export default function AddLocationMain() {
                     />
 
                     {gallery.length > 0 && (
-
                       <div className="mt-4 flex flex-wrap gap-3">
-
                         {gallery.map((file, index) => (
-
                           <img
                             key={index}
                             src={URL.createObjectURL(file)}
                             className="h-20 w-20 rounded-lg border object-cover"
                           />
-
                         ))}
-
                       </div>
-
                     )}
-
                   </div>
 
                   {/* Detail */}
 
                   <div className="md:col-span-2">
-
                     <label className="mb-2 block text-sm font-medium">
                       Detail
                     </label>
 
-                    <textarea
-                      rows={5}
-                      name="detail"
+                    <RichTextEditor
                       value={formData.detail}
-                      onChange={handleChange}
-                      className="w-full rounded-lg border px-4 py-3"
+                      onChange={(val) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          detail: val,
+                        }))
+                      }
+                      height={400}
                     />
-
                   </div>
-
                 </div>
 
                 {/* Site Information */}
 
                 <div className="mt-10">
-
                   <h3 className="mb-5 text-lg font-semibold">
                     Site Information
                   </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                     <div>
                       <label className="mb-2 block text-sm font-medium">
                         Media
@@ -410,14 +374,11 @@ export default function AddLocationMain() {
                         className="h-11 w-full rounded-lg border px-4"
                       />
                     </div>
-
                   </div>
-
                 </div>
 
                 <div className="mt-8">
-<div className="mt-6 flex justify-end gap-3">
-             
+                  <div className="mt-6 flex justify-end gap-3">
                     <button
                       type="submit"
                       className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
@@ -425,11 +386,8 @@ export default function AddLocationMain() {
                       Add
                     </button>
                   </div>
-
                 </div>
-
               </form>
-
             </div>
           </div>
         </ComponentCard>

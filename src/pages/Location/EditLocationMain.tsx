@@ -4,12 +4,13 @@ import { toast } from "react-toastify";
 
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
+import RichTextEditor from "../../components/editor/RichTextEditor";
 
 import {
   getActiveLocationsApi,
   getLocationMainDetailApi,
   updateLocationMainApi,
-  deleteGalleryImageApi
+  deleteGalleryImageApi,
 } from "../../api/locationMainApi";
 import { Link } from "react-router";
 
@@ -50,33 +51,19 @@ export default function EditLocationMain() {
   // ===========================
   // LOAD LOCATIONS
   // ===========================
-const handleDeleteGallery = async (image: string) => {
+  const handleDeleteGallery = async (image: string) => {
+    try {
+      const response = await deleteGalleryImageApi(id!, image);
 
-  try {
+      if (response.data.success) {
+        toast.success(response.data.message);
 
-    const response =
-      await deleteGalleryImageApi(id!, image);
-
-    if (response.data.success) {
-
-      toast.success(response.data.message);
-
-      setOldGallery(
-        oldGallery.filter((img) => img !== image)
-      );
-
+        setOldGallery(oldGallery.filter((img) => img !== image));
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Delete failed");
     }
-
-  } catch (error: any) {
-
-    toast.error(
-      error.response?.data?.message ||
-      "Delete failed"
-    );
-
-  }
-
-};
+  };
   const fetchLocations = async () => {
     try {
       const res = await getActiveLocationsApi();
@@ -317,33 +304,24 @@ const handleDeleteGallery = async (image: string) => {
                       Existing Gallery
                     </label>
 
-                   <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-4">
+                      {oldGallery.map((img, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={img}
+                            className="h-24 w-24 rounded-lg border object-cover"
+                          />
 
-  {oldGallery.map((img, index) => (
-
-    <div
-      key={index}
-      className="relative"
-    >
-
-      <img
-        src={img}
-        className="h-24 w-24 rounded-lg border object-cover"
-      />
-
-      <button
-        type="button"
-        onClick={() => handleDeleteGallery(img)}
-        className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-white shadow hover:bg-red-700"
-      >
-        ×
-      </button>
-
-    </div>
-
-  ))}
-
-</div>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteGallery(img)}
+                            className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-white shadow hover:bg-red-700"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* New Gallery */}
@@ -381,13 +359,15 @@ const handleDeleteGallery = async (image: string) => {
                     <label className="mb-2 block text-sm font-medium">
                       Detail
                     </label>
-
-                    <textarea
-                      rows={5}
-                      name="detail"
+                    <RichTextEditor
                       value={formData.detail}
-                      onChange={handleChange}
-                      className="w-full rounded-lg border px-4 py-3"
+                      onChange={(val) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          detail: val,
+                        }))
+                      }
+                      height={400}
                     />
                   </div>
                 </div>
@@ -473,7 +453,7 @@ const handleDeleteGallery = async (image: string) => {
                 </div>
 
                 <div className="mt-8">
-                <div className="mt-6 flex justify-end gap-3">
+                  <div className="mt-6 flex justify-end gap-3">
                     <Link
                       to="/list-location"
                       className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
