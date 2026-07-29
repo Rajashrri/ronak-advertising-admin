@@ -52,7 +52,6 @@ import AddMediaCoverage from "./pages/Media/AddMediaCoverage";
 import EditMediaCoverage from "./pages/Media/EditMediaCoverage";
 import MediaCoverageList from "./pages/Media/MediaCoverageList";
 
-
 import AddLocation from "./pages/Location/AddLocation";
 import EditLocation from "./pages/Location/EditLocation";
 import LocationList from "./pages/Location/LocationList";
@@ -61,8 +60,15 @@ import AddLocationMain from "./pages/Location/AddLocationMain";
 import EditLocationMain from "./pages/Location/EditLocationMain";
 import LocationMainList from "./pages/Location/LocationMainList";
 
+import AddCaseStudy from "./pages/CaseStudy/AddCaseStudy";
+import CaseStudyList from "./pages/CaseStudy/CaseStudyList";
+import EditCaseStudy from "./pages/CaseStudy/EditCaseStudy";
 
+import SeoCaseStudy from "./pages/CaseStudy/SeoCaseStudy";
+import CaseStudyTestimonialList from "./pages/CaseStudy/CaseStudyTestimonialList";
 
+import AddCaseStudyTestimonial from "./pages/CaseStudy/AddCaseStudyTestimonial";
+import EditCaseStudyTestimonial from "./pages/CaseStudy/EditCaseStudyTestimonial";
 
 
 import AddArticle from "./pages/Articles/AddArticle";
@@ -114,11 +120,10 @@ export default function App() {
 
             <Route path="/list-clientele" element={<ClienteleList />} />
             <Route path="/edit-clientele/:id" element={<EditClientele />} />
- <Route path="/add-article" element={<AddArticle />} />
+            <Route path="/add-article" element={<AddArticle />} />
 
             <Route path="/list-article" element={<ArticleList />} />
             <Route path="/edit-article/:id" element={<EditArticle />} />
-
 
             <Route path="/add-leadershipteam" element={<AddLeadershipTeam />} />
 
@@ -144,23 +149,27 @@ export default function App() {
               element={<EditMediaCoverage />}
             />
 
- <Route path="/add-locationmaster" element={<AddLocation />} />
+            <Route path="/add-locationmaster" element={<AddLocation />} />
 
             <Route path="/list-locationmaster" element={<LocationList />} />
-            <Route
-              path="/edit-locationmaster/:id"
-              element={<EditLocation />}
-            />
- <Route path="/add-location" element={<AddLocationMain />} />
+            <Route path="/edit-locationmaster/:id" element={<EditLocation />} />
+            <Route path="/add-location" element={<AddLocationMain />} />
 
             <Route path="/list-location" element={<LocationMainList />} />
-            <Route
-              path="/edit-location/:id"
-              element={<EditLocationMain />}
-            />
+            <Route path="/edit-location/:id" element={<EditLocationMain />} />
             <Route path="/edit-category/:id" element={<EditCategory />} />
             <Route path="/edit-blog/:id" element={<EditBlog />} />
             <Route path="/seo/:id" element={<SeoBlog />} />
+
+            <Route path="/add-casestudy" element={<AddCaseStudy />} />
+
+            <Route path="/list-casestudy" element={<CaseStudyList />} />
+            <Route path="/edit-case-study/:id" element={<EditCaseStudy />} />
+            <Route path="/seo-case-study/:id" element={<SeoCaseStudy />} />
+            <Route path="/case-study-testimonial/:caseStudyId" element={<CaseStudyTestimonialList />} />
+            <Route path="/add-case-study-testimonial/:caseStudyId" element={<AddCaseStudyTestimonial />} />
+            <Route path="/edit-case-study-testimonial/:id" element={<EditCaseStudyTestimonial />} />
+
 
             <Route path="/contact-list" element={<Contact />} />
             <Route path="/career-list" element={<Career />} />

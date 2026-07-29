@@ -101,6 +101,16 @@ const navItems: NavItem[] = [
       { name: "List Location", path: "/list-location", pro: false },
     ],
   },
+
+  
+  {
+    name: "Case Study",
+    icon: <TableIcon />,
+    subItems: [
+      { name: "Add Case Study", path: "/add-casestudy", pro: false },
+      { name: "List Case Study", path: "/list-casestudy", pro: false },
+    ],
+  },
   {
     name: "List",
     icon: <TableIcon />,
