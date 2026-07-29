@@ -155,7 +155,7 @@ const handleFeatured = async (id: string) => {
   isHeader
   className="px-6 py-4 text-center text-sm font-semibold"
 >
-  Featured
+  Featured gg
 </TableCell>
           <TableCell
             isHeader
