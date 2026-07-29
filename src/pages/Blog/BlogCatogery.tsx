@@ -16,6 +16,8 @@ import Badge from "../../components/ui/badge/Badge";
 
 import { getCategoriesApi, deleteCategoryApi,  changeCategoryStatusApi,
  } from "../../api/blogCategoryApi";
+
+ 
 interface Category {
   _id: string;
   categoryName: string;
