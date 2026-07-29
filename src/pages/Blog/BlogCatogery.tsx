@@ -20,6 +20,8 @@ interface Category {
   _id: string;
   categoryName: string;
   slug: string;
+    status: number; // <-- Add this
+
 }
 
 export default function BlogCatogery() {
