@@ -20,6 +20,7 @@ export default function EditCaseStudy() {
     name: "",
     briefIntro: "",
     detail: "",
+    slug: "",
   });
 
   const [featuredImage, setFeaturedImage] = useState<File | null>(null);
@@ -41,6 +42,7 @@ export default function EditCaseStudy() {
           name: data.name,
           briefIntro: data.briefIntro,
           detail: data.detail,
+          slug: data.slug,
         });
 
         setOldFeaturedImage(data.featuredImage);
@@ -50,15 +52,26 @@ export default function EditCaseStudy() {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const generateSlug = (text: string) => {
+    return text
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
   };
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "name" && { slug: generateSlug(value) }),
+    }));
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -69,7 +82,7 @@ export default function EditCaseStudy() {
       data.append("name", formData.name);
       data.append("briefIntro", formData.briefIntro);
       data.append("detail", formData.detail);
-
+      data.append("slug", formData.slug);
       if (featuredImage) {
         data.append("featuredImage", featuredImage);
       }
@@ -81,9 +94,7 @@ export default function EditCaseStudy() {
         navigate("/list-casestudy");
       }
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || "Something went wrong"
-      );
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -97,7 +108,6 @@ export default function EditCaseStudy() {
             <div className="p-6">
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 gap-6">
-
                   <div>
                     <label className="mb-1.5 block text-sm font-medium">
                       Industry
@@ -125,7 +135,19 @@ export default function EditCaseStudy() {
                       className="h-11 w-full rounded-lg border px-4"
                     />
                   </div>
+                  <div>
+                    <label className="mb-1.5 block text-sm font-medium">
+                      Slug
+                    </label>
 
+                    <input
+                      type="text"
+                      name="slug"
+                      value={formData.slug}
+                      onChange={handleChange}
+                      className="h-11 w-full rounded-lg border px-4"
+                    />
+                  </div>
                   <div>
                     <label className="mb-1.5 block text-sm font-medium">
                       Featured Image
@@ -144,9 +166,7 @@ export default function EditCaseStudy() {
                       type="file"
                       accept="image/*"
                       onChange={(e) =>
-                        setFeaturedImage(
-                          e.target.files?.[0] || null
-                        )
+                        setFeaturedImage(e.target.files?.[0] || null)
                       }
                     />
                   </div>
@@ -198,7 +218,6 @@ export default function EditCaseStudy() {
                       Update Case Study
                     </button>
                   </div>
-
                 </div>
               </form>
             </div>
