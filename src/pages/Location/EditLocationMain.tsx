@@ -36,6 +36,7 @@ export default function EditLocationMain() {
     siteCode: "",
     latitude: "",
     longitude: "",
+     slug: "",
   });
 
   const [image, setImage] = useState<File | null>(null);
@@ -97,6 +98,7 @@ export default function EditLocationMain() {
           siteCode: item.siteCode,
           latitude: item.latitude,
           longitude: item.longitude,
+          slug: item.slug || "",
         });
 
         setOldImage(item.image);
@@ -115,17 +117,27 @@ export default function EditLocationMain() {
   // ===========================
   // CHANGE
   // ===========================
+const createSlug = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+const handleChange = (
+  e: React.ChangeEvent<
+    HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+  >
+) => {
+  const { name, value } = e.target;
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value,
+    ...(name === "siteName" ? { slug: createSlug(value) } : {}),
+  }));
+};
 
   // ===========================
   // IMAGE
@@ -250,7 +262,25 @@ export default function EditLocationMain() {
                       </p>
                     )}
                   </div>
+<div>
+  <label className="mb-2 block text-sm font-medium">
+    Slug
+  </label>
 
+  <input
+    type="text"
+    name="slug"
+    value={formData.slug}
+    onChange={handleChange}
+    className="h-11 w-full rounded-lg border px-4"
+  />
+
+  {errors.slug && (
+    <p className="text-red-500 text-sm mt-1">
+      {errors.slug}
+    </p>
+  )}
+</div>
                   {/* Current Image */}
 
                   <div>
