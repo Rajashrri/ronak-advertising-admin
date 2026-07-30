@@ -53,7 +53,9 @@ export const getBlogDetailsApi = (slug) => {
 };
 
 
-
+export const getNewsletterApi = () => {
+  return frontApi.get("/newsletter");
+};
 export const contactApi = (data) => {
   return frontApi.post(
     `/add-contact`,

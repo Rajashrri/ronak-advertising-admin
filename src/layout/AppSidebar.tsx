@@ -116,7 +116,7 @@ const navItems: NavItem[] = [
     icon: <TableIcon />,
     subItems: [
       { name: "Contact List", path: "/contact-list", pro: false },
-      { name: "Career List", path: "/career-list", pro: false },
+      { name: "Newsletter List", path: "/newsletter-list", pro: false },
     ],
   },
 ];

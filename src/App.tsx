@@ -78,7 +78,7 @@ import ArticleList from "./pages/Articles/ArticleList";
 
 
 import Contact from "./pages/List/contact";
-import Career from "./pages/List/career";
+import Newsletter from "./pages/List/Newsletter";
 
 import AuthGuard from "./components/AuthGuard";
 
@@ -172,7 +172,7 @@ export default function App() {
 
 
             <Route path="/contact-list" element={<Contact />} />
-            <Route path="/career-list" element={<Career />} />
+            <Route path="/newsletter-list" element={<Newsletter />} />
 
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
