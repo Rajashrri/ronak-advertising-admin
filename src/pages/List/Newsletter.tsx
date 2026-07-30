@@ -12,11 +12,9 @@ import {
 
 import { getNewsletterApi } from "../../api/listApi";
 
-interface Career {
+interface Newsletter {
   _id: string;
-
   email: string;
-
   createdAt: string;
 }
 
