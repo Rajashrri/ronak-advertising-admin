@@ -60,6 +60,8 @@ import AddLocationMain from "./pages/Location/AddLocationMain";
 import EditLocationMain from "./pages/Location/EditLocationMain";
 import LocationMainList from "./pages/Location/LocationMainList";
 
+import UpdateLocationSeo from "./pages/Location/UpdateLocationSeo";
+
 import AddCaseStudy from "./pages/CaseStudy/AddCaseStudy";
 import CaseStudyList from "./pages/CaseStudy/CaseStudyList";
 import EditCaseStudy from "./pages/CaseStudy/EditCaseStudy";
@@ -70,12 +72,9 @@ import CaseStudyTestimonialList from "./pages/CaseStudy/CaseStudyTestimonialList
 import AddCaseStudyTestimonial from "./pages/CaseStudy/AddCaseStudyTestimonial";
 import EditCaseStudyTestimonial from "./pages/CaseStudy/EditCaseStudyTestimonial";
 
-
 import AddArticle from "./pages/Articles/AddArticle";
 import EditArticle from "./pages/Articles/EditArticle";
 import ArticleList from "./pages/Articles/ArticleList";
-
-
 
 import Contact from "./pages/List/contact";
 import Newsletter from "./pages/List/Newsletter";
@@ -157,6 +156,11 @@ export default function App() {
 
             <Route path="/list-location" element={<LocationMainList />} />
             <Route path="/edit-location/:id" element={<EditLocationMain />} />
+            <Route
+              path="/update-location-seo/:id"
+              element={<UpdateLocationSeo />}
+            />
+
             <Route path="/edit-category/:id" element={<EditCategory />} />
             <Route path="/edit-blog/:id" element={<EditBlog />} />
             <Route path="/seo/:id" element={<SeoBlog />} />
@@ -166,10 +170,18 @@ export default function App() {
             <Route path="/list-casestudy" element={<CaseStudyList />} />
             <Route path="/edit-case-study/:id" element={<EditCaseStudy />} />
             <Route path="/seo-case-study/:id" element={<SeoCaseStudy />} />
-            <Route path="/case-study-testimonial/:caseStudyId" element={<CaseStudyTestimonialList />} />
-            <Route path="/add-case-study-testimonial/:caseStudyId" element={<AddCaseStudyTestimonial />} />
-            <Route path="/edit-case-study-testimonial/:id" element={<EditCaseStudyTestimonial />} />
-
+            <Route
+              path="/case-study-testimonial/:caseStudyId"
+              element={<CaseStudyTestimonialList />}
+            />
+            <Route
+              path="/add-case-study-testimonial/:caseStudyId"
+              element={<AddCaseStudyTestimonial />}
+            />
+            <Route
+              path="/edit-case-study-testimonial/:id"
+              element={<EditCaseStudyTestimonial />}
+            />
 
             <Route path="/contact-list" element={<Contact />} />
             <Route path="/newsletter-list" element={<Newsletter />} />

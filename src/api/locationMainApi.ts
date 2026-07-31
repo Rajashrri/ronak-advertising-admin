@@ -20,7 +20,12 @@ export const getActiveLocationsApi = async () => {
 // =======================
 // ADD
 // =======================
-
+export const updateLocationSeoApi = (id: string, data: any) => {
+  return locationMainApi.patch(
+    `/update-location-seo/${id}`,
+    data
+  );
+};
 export const addLocationMainApi = async (data: any) => {
   return locationMainApi.post(
     "/add-location-main",
