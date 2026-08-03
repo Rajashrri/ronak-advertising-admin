@@ -25,6 +25,7 @@ export default function AddLocationMain() {
     detail: "",
     media: "",
     type: "",
+    mediaType: "",
     siteCode: "",
     latitude: "",
     longitude: "",
@@ -61,34 +62,34 @@ export default function AddLocationMain() {
   // HANDLE CHANGE
   // ===========================
 
-const createSlug = (text: string) =>
-  text
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
+  const createSlug = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
 
-const handleChange = (
-  e: React.ChangeEvent<
-    HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-  >
-) => {
-  const { name, value } = e.target;
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const { name, value } = e.target;
 
-  setFormData((prev) => {
-    const updated = {
-      ...prev,
-      [name]: value,
-    };
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        [name]: value,
+      };
 
-    if (name === "siteName") {
-      updated.slug = createSlug(value);
-    }
+      if (name === "siteName") {
+        updated.slug = createSlug(value);
+      }
 
-    return updated;
-  });
-};
+      return updated;
+    });
+  };
 
   // ===========================
   // IMAGE
@@ -124,7 +125,9 @@ const handleChange = (
     if (!formData.siteName.trim()) err.siteName = "Site Name required";
 
     if (!image) err.image = "Image required";
-
+    if (!formData.mediaType) {
+      err.mediaType = "Media Type is required";
+    }
     setErrors(err);
 
     if (Object.keys(err).length > 0) return;
@@ -156,6 +159,7 @@ const handleChange = (
           detail: "",
           media: "",
           type: "",
+          mediaType: "",
           siteCode: "",
           latitude: "",
           longitude: "",
@@ -253,7 +257,31 @@ const handleChange = (
                     )}
                   </div>
                   {/* Image */}
+                  <div className="mb-5">
+                    <label className="mb-2 block text-sm font-medium">
+                      Media Type <span className="text-red-500">*</span>
+                    </label>
 
+                    <select
+                      name="mediaType"
+                      value={formData.mediaType}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border p-3"
+                      
+                    >
+                      <option value="">Select Media Type</option>
+                      <option value="Hoarding">Hoarding</option>
+                      <option value="LED">LED</option>
+                      <option value="BQS">BQS</option>
+                      <option value="Transit Media">Transit Media</option>
+                    </select>
+
+                    {errors.mediaType && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.mediaType}
+                      </p>
+                    )}
+                  </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium">
                       Image

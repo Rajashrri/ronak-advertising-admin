@@ -32,6 +32,8 @@ interface LocationMain {
   image: string;
   ytVideoLink: string;
   media: string;
+  mediaType: string;
+
   type: string;
   siteCode: string;
   latitude: string;
@@ -129,14 +131,14 @@ export default function LocationMainList() {
                     >
                       Location
                     </TableCell>
-
+ <TableCell isHeader>Media Type</TableCell>
                     <TableCell
                       isHeader
                       className="px-6 py-4 text-left text-sm font-semibold"
                     >
                       Site Name
                     </TableCell>
-
+                   
                     <TableCell
                       isHeader
                       className="px-6 py-4 text-center text-sm font-semibold"
@@ -176,7 +178,7 @@ export default function LocationMainList() {
                         <TableCell className="px-6 py-4 font-medium">
                           {item.locationId?.locationName || "-"}
                         </TableCell>
-
+                        <TableCell>{item.mediaType}</TableCell>
                         <TableCell className="px-6 py-4">
                           {item.siteName}
                         </TableCell>
@@ -215,7 +217,6 @@ export default function LocationMainList() {
                             </Link>
                           </div>
                         </TableCell>
-                        
                       </TableRow>
                     ))
                   ) : (

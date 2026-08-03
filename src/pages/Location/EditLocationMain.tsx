@@ -32,11 +32,12 @@ export default function EditLocationMain() {
     ytVideoLink: "",
     detail: "",
     media: "",
+    mediaType: "",
     type: "",
     siteCode: "",
     latitude: "",
     longitude: "",
-     slug: "",
+    slug: "",
   });
 
   const [image, setImage] = useState<File | null>(null);
@@ -95,6 +96,8 @@ export default function EditLocationMain() {
           detail: item.detail,
           media: item.media,
           type: item.type,
+          mediaType: item.mediaType,
+
           siteCode: item.siteCode,
           latitude: item.latitude,
           longitude: item.longitude,
@@ -117,27 +120,27 @@ export default function EditLocationMain() {
   // ===========================
   // CHANGE
   // ===========================
-const createSlug = (text: string) =>
-  text
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
+  const createSlug = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
 
-const handleChange = (
-  e: React.ChangeEvent<
-    HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-  >
-) => {
-  const { name, value } = e.target;
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const { name, value } = e.target;
 
-  setFormData((prev) => ({
-    ...prev,
-    [name]: value,
-    ...(name === "siteName" ? { slug: createSlug(value) } : {}),
-  }));
-};
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "siteName" ? { slug: createSlug(value) } : {}),
+    }));
+  };
 
   // ===========================
   // IMAGE
@@ -169,6 +172,7 @@ const handleChange = (
     let err: any = {};
 
     if (!formData.locationId) err.locationId = "Select Location";
+    if (!formData.mediaType) err.mediaType = "Select Media Type";
 
     if (!formData.siteName.trim()) err.siteName = "Site Name is required";
 
@@ -262,25 +266,50 @@ const handleChange = (
                       </p>
                     )}
                   </div>
-<div>
-  <label className="mb-2 block text-sm font-medium">
-    Slug
-  </label>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium">
+                      Slug
+                    </label>
 
-  <input
-    type="text"
-    name="slug"
-    value={formData.slug}
-    onChange={handleChange}
-    className="h-11 w-full rounded-lg border px-4"
-  />
+                    <input
+                      type="text"
+                      name="slug"
+                      value={formData.slug}
+                      onChange={handleChange}
+                      className="h-11 w-full rounded-lg border px-4"
+                    />
 
-  {errors.slug && (
-    <p className="text-red-500 text-sm mt-1">
-      {errors.slug}
-    </p>
-  )}
-</div>
+                    {errors.slug && (
+                      <p className="text-red-500 text-sm mt-1">{errors.slug}</p>
+                    )}
+                  </div>
+
+                  {/* Image */}
+                  <div className="mb-5">
+                    <label className="mb-2 block text-sm font-medium">
+                      Media Type <span className="text-red-500">*</span>
+                    </label>
+
+                    <select
+                      name="mediaType"
+                      value={formData.mediaType}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border p-3"
+                      
+                    >
+                      <option value="">Select Media Type</option>
+                      <option value="Hoarding">Hoarding</option>
+                      <option value="LED">LED</option>
+                      <option value="BQS">BQS</option>
+                      <option value="Transit Media">Transit Media</option>
+                    </select>
+
+                    {errors.mediaType && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.mediaType}
+                      </p>
+                    )}
+                  </div>
                   {/* Current Image */}
 
                   <div>
