@@ -78,6 +78,8 @@ import ArticleList from "./pages/Articles/ArticleList";
 
 import Contact from "./pages/List/contact";
 import Newsletter from "./pages/List/Newsletter";
+import LocationEnquiry from "./pages/List/LocationEnquiry";
+import PopupEnquiry from "./pages/List/PopupEnquiry";
 
 import AuthGuard from "./components/AuthGuard";
 
@@ -185,6 +187,8 @@ export default function App() {
 
             <Route path="/contact-list" element={<Contact />} />
             <Route path="/newsletter-list" element={<Newsletter />} />
+            <Route path="/enquiry-list" element={<LocationEnquiry />} />
+            <Route path="/popupenq-list" element={<PopupEnquiry />} />
 
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />

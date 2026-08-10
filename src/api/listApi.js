@@ -39,7 +39,14 @@ frontApi.interceptors.response.use(
   },
 );
 
+export const getLocationEnquiriesApi = () => {
+  return frontApi.get("/location-enquiries");
+};
+// listApi.js
 
+export const getPopupEnquiriesApi = () => {
+  return frontApi.get("/popup-enquiries");
+};
 export const getBlogsApi = () => {
   return frontApi.get("/blogs");
 };
@@ -52,17 +59,12 @@ export const getBlogDetailsApi = (slug) => {
   return frontApi.get(`/blog/${slug}`);
 };
 
-
 export const getNewsletterApi = () => {
   return frontApi.get("/newsletter");
 };
 export const contactApi = (data) => {
-  return frontApi.post(
-    `/add-contact`,
-    data
-  );
+  return frontApi.post(`/add-contact`, data);
 };
-
 
 export const getContactsApi = () => {
   return frontApi.get(`/contacts`);

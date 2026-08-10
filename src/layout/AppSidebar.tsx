@@ -102,7 +102,6 @@ const navItems: NavItem[] = [
     ],
   },
 
-  
   {
     name: "Case Study",
     icon: <TableIcon />,
@@ -117,6 +116,8 @@ const navItems: NavItem[] = [
     subItems: [
       { name: "Contact List", path: "/contact-list", pro: false },
       { name: "Newsletter List", path: "/newsletter-list", pro: false },
+      { name: "Location Enquiry List", path: "/enquiry-list", pro: false },
+      { name: "POPUP form Enquiry List", path: "/popupenq-list", pro: false },
     ],
   },
 ];
