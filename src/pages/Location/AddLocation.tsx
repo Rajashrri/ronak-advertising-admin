@@ -7,6 +7,9 @@ import { addLocationApi } from "../../api/locationApi";
 export default function AddLocation() {
   const [formData, setFormData] = useState({
     locationName: "",
+    audience_reach: "",
+    media_sites: "",
+    ideal: "",
   });
 
   const [image, setImage] = useState<File | null>(null);
@@ -27,6 +30,16 @@ export default function AddLocation() {
       err.locationName = "Location Name is required";
     }
 
+    if (!formData.audience_reach) {
+      err.audience_reach = "Daily Audience Reach is required";
+    }
+    if (!formData.media_sites) {
+      err.media_sites = "Ronak Media Sites is required";
+    }
+
+    if (!formData.ideal) {
+      err.ideal = "Ideal for is required";
+    }
     if (!image) {
       err.image = "Image is required";
     }
@@ -45,6 +58,10 @@ export default function AddLocation() {
       const data = new FormData();
 
       data.append("locationName", formData.locationName);
+      data.append("audience_reach", formData.audience_reach);
+      data.append("media_sites", formData.media_sites);
+
+      data.append("ideal", formData.ideal);
 
       if (image) {
         data.append("image", image);
@@ -57,6 +74,9 @@ export default function AddLocation() {
 
         setFormData({
           locationName: "",
+          audience_reach: "",
+          media_sites: "",
+          ideal: "",
         });
 
         setImage(null);
@@ -99,6 +119,62 @@ export default function AddLocation() {
                     )}
                   </div>
 
+                  <div>
+                    <label className="mb-1.5 block text-sm font-medium">
+                      Daily Audience Reach
+                    </label>
+
+                    <input
+                      type="number"
+                      name="audience_reach"
+                      value={formData.audience_reach}
+                      onChange={handleChange}
+                      className="h-11 w-full rounded-lg border px-4"
+                    />
+
+                    {errors.audience_reach && (
+                      <p className="text-red-500 text-sm">
+                        {errors.audience_reach}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="mb-1.5 block text-sm font-medium">
+                      Ronak Media Sites
+                    </label>
+
+                    <input
+                      type="number"
+                      name="media_sites"
+                      value={formData.media_sites}
+                      onChange={handleChange}
+                      className="h-11 w-full rounded-lg border px-4"
+                    />
+
+                    {errors.media_sites && (
+                      <p className="text-red-500 text-sm">
+                        {errors.media_sites}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-sm font-medium">
+                      Ideal for:
+                    </label>
+
+                    <input
+                      type="text"
+                      name="ideal"
+                      value={formData.ideal}
+                      onChange={handleChange}
+                      className="h-11 w-full rounded-lg border px-4"
+                    />
+
+                    {errors.ideal && (
+                      <p className="text-red-500 text-sm">{errors.ideal}</p>
+                    )}
+                  </div>
                   {/* Image */}
 
                   <div>
