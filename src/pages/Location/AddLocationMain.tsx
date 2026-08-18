@@ -35,7 +35,8 @@ export default function AddLocationMain() {
   const [image, setImage] = useState<File | null>(null);
 
   const [gallery, setGallery] = useState<File[]>([]);
-
+  const [isDragging, setIsDragging] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
   // ===========================
@@ -105,12 +106,45 @@ export default function AddLocationMain() {
   // GALLERY
   // ===========================
 
-  const handleGallery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setGallery(Array.from(e.target.files));
-    }
+  const addGalleryFiles = (files: File[]) => {
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+
+    if (!imageFiles.length) return;
+
+    setGallery((prev) => [...prev, ...imageFiles]);
   };
 
+  const handleGallery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      addGalleryFiles(Array.from(e.target.files));
+    }
+
+    // Same file dobara select karne ke liye input reset
+    e.target.value = "";
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer.files);
+
+    addGalleryFiles(files);
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setGallery((prev) => prev.filter((_, i) => i !== index));
+  };
   // ===========================
   // SUBMIT
   // ===========================
@@ -131,7 +165,7 @@ export default function AddLocationMain() {
     setErrors(err);
 
     if (Object.keys(err).length > 0) return;
-
+    setIsSubmitting(true);
     try {
       const data = new FormData();
 
@@ -172,6 +206,8 @@ export default function AddLocationMain() {
       }
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -326,25 +362,92 @@ export default function AddLocationMain() {
                     <label className="mb-2 block text-sm font-medium">
                       Media Gallery Images
                     </label>
-                    <p className="mb-2 text-sm font-medium text-red-500">
-                      Note: You can upload multiple images (Add More).
-                    </p>
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handleGallery}
-                    />
 
+                    <p className="mb-3 text-sm text-gray-500">
+                      You can select images one by one, select multiple images,
+                      or drag & drop images here.
+                    </p>
+
+                    {/* Drag & Drop Area */}
+                    <div
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      className={`relative flex min-h-[180px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition ${
+                        isDragging
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-300 bg-gray-50"
+                      }`}
+                    >
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleGallery}
+                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                      />
+
+                      <div className="text-center">
+                        <div className="mb-3 text-4xl">📁</div>
+
+                        <p className="text-sm font-medium text-gray-700">
+                          Drag & Drop images here
+                        </p>
+
+                        <p className="mt-1 text-xs text-gray-500">
+                          or click to select images
+                        </p>
+
+                        <p className="mt-2 text-xs text-gray-400">
+                          You can add images one by one or multiple at once
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Gallery Preview */}
                     {gallery.length > 0 && (
-                      <div className="mt-4 flex flex-wrap gap-3">
-                        {gallery.map((file, index) => (
-                          <img
-                            key={index}
-                            src={URL.createObjectURL(file)}
-                            className="h-20 w-20 rounded-lg border object-cover"
-                          />
-                        ))}
+                      <div className="mt-5">
+                        <div className="mb-3 flex items-center justify-between">
+                          <h4 className="text-sm font-semibold text-gray-700">
+                            Selected Images ({gallery.length})
+                          </h4>
+
+                          <button
+                            type="button"
+                            onClick={() => setGallery([])}
+                            className="text-sm font-medium text-red-500 hover:text-red-700"
+                          >
+                            Remove All
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                          {gallery.map((file, index) => (
+                            <div
+                              key={`${file.name}-${index}`}
+                              className="group relative overflow-hidden rounded-lg border bg-white"
+                            >
+                              <img
+                                src={URL.createObjectURL(file)}
+                                alt={file.name}
+                                className="h-28 w-full object-cover"
+                              />
+
+                              {/* Remove Button */}
+                              <button
+                                type="button"
+                                onClick={() => removeGalleryImage(index)}
+                                className="absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-full bg-red-500 text-sm font-bold text-white opacity-0 transition group-hover:opacity-100"
+                              >
+                                ×
+                              </button>
+
+                              <div className="truncate px-2 py-1 text-xs text-gray-500">
+                                {file.name}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -453,9 +556,21 @@ export default function AddLocationMain() {
                   <div className="mt-6 flex justify-end gap-3">
                     <button
                       type="submit"
-                      className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                      disabled={isSubmitting}
+                      className={`rounded-md px-4 py-2 text-sm font-medium text-white ${
+                        isSubmitting
+                          ? "cursor-not-allowed bg-blue-400"
+                          : "bg-blue-600 hover:bg-blue-700"
+                      }`}
                     >
-                      Add
+                      {isSubmitting ? (
+                        <span className="flex items-center gap-2">
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                          Uploading...
+                        </span>
+                      ) : (
+                        "Add"
+                      )}
                     </button>
                   </div>
                 </div>
