@@ -97,7 +97,7 @@ localStorage.setItem("user", JSON.stringify(res.data.user));
             Enter the 6-digit OTP sent to:
           </p>
 
-          <p className="mt-1 font-medium text-brand-500">
+          <p className="mt-1 font-medium text-[#dd2b1c]">
             {email || "No email found"}
           </p>
         </div>
