@@ -242,7 +242,7 @@ export default function AddLeadershipTeam() {
                   {/* Button */}
 
                
-                  <div className="mt-6 flex justify-end gap-3">
+                  <div className="mt-6 flex justify-start gap-3">
              
                     <button
                       type="submit"

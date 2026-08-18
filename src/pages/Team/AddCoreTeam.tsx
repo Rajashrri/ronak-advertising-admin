@@ -167,7 +167,7 @@ export default function AddCoreTeam() {
 
                   </div>
 
-                  <div className="mt-6 flex justify-end gap-3">
+                  <div className="mt-6 flex justify-start gap-3">
                     
 
                     <button

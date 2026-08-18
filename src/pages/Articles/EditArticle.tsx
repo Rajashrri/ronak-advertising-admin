@@ -230,7 +230,7 @@ export default function EditArticle() {
               </div>
 
               {/* BUTTON */}
-                 <div className="mt-6 flex justify-end gap-3">
+                 <div className="mt-6 flex justify-start gap-3">
                     <Link
                       to="/list-article"
                       className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"

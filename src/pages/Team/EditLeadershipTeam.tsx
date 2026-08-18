@@ -287,7 +287,7 @@ export default function EditLeadershipTeam() {
 
                   {/* Update Button */}
 
-                  <div className="mt-6 flex justify-end gap-3">
+                  <div className="mt-6 flex justify-start gap-3">
                     <Link
                       to="/list-leadershipteam"
                       className="btn2"

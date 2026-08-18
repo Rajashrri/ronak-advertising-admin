@@ -215,7 +215,7 @@ export default function EditCoreTeam() {
 
                   {/* Submit Button */}
 
-                  <div className="mt-6 flex justify-end gap-3">
+                  <div className="mt-6 flex justify-start gap-3">
                     <Link
                       to="/list-coreteam"
                       className="btn2"
