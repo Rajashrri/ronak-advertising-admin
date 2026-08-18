@@ -871,7 +871,11 @@ span.flatpickr-weekday,
 }
 
 .menu-item-active,
-.menu-dropdown-item-active{
+.menu-dropdown-item-active,
+.menu-item-icon-active{
   background-color: #de2c1d0f;
-    color: #dd2b1c;
+  color: #dd2b1c;
+}
+.menu-item-icon-active{
+  color: #dd2b1c;
 }
