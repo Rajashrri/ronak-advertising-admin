@@ -148,7 +148,7 @@ export default function EditCaseStudyTestimonial() {
                     <button
                       type="button"
                       onClick={() => navigate(-1)}
-                      className="rounded-lg border px-5 py-3"
+                      className="btn2"
                     >
                       Back
                     </button>

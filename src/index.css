@@ -828,7 +828,30 @@ span.flatpickr-weekday,
     justify-content: center;
     align-items: center;
     gap: 10px;
-    margin: auto 0 auto auto;
+    /* margin: auto 0 auto auto; */
+    padding: 20px 30px;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+    display: flex;
+    /* width: 100%; */
+    transition: all .3s linear
+}
+.btn2 {
+    border: 1px solid var(--200,#ccc);
+    width: fit-content;
+    height: 60px;
+    color: var(--White,#dd2b1c);
+    font-family: var(--Ubuntu);
+    transition: all .3 linear;
+    text-transform: capitalize;
+    background: #fff;
+    border-radius: 999px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    /* margin: auto 0 auto auto; */
     padding: 20px 30px;
     font-size: 18px;
     font-style: normal;

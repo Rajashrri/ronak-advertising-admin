@@ -206,7 +206,7 @@ export default function EditCaseStudy() {
                     <button
                       type="button"
                       onClick={() => navigate(-1)}
-                      className="rounded-lg border px-4 py-3"
+                      className="btn2"
                     >
                       Back
                     </button>
