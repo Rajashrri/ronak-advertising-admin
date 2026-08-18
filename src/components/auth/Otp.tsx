@@ -128,7 +128,7 @@ localStorage.setItem("user", JSON.stringify(res.data.user));
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-3 text-white bg-brand-500 rounded-lg hover:bg-brand-600 disabled:opacity-70"
+              className="btn disabled:opacity-70"
             >
               {loading ? "Verifying..." : "Verify OTP"}
             </button>
