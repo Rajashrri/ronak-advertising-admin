@@ -870,7 +870,8 @@ span.flatpickr-weekday,
     background-color: #fff
 }
 
-.menu-item-active{
+.menu-item-active,
+.menu-dropdown-item-active{
   background-color: #de2c1d0f;
     color: #dd2b1c;
 }
