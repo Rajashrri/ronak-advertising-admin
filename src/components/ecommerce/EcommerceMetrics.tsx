@@ -67,7 +67,7 @@ export default function EcommerceMetrics() {
 
   return (
     <div className="w-full">
-      <div className="grid w-full grid-cols-3 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid w-full grid-cols-4 gap-6 sm:grid-cols-3 lg:grid-cols-4">
 
         {/* Contact Enquiries */}
         <div className="w-full min-w-0 rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
