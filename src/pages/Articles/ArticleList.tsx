@@ -31,6 +31,7 @@ interface Article {
   briefIntro: string;
   articleLink: string;
   status: number;
+  createdAt: string;
 }
 
 export default function ArticleList() {
@@ -104,140 +105,135 @@ export default function ArticleList() {
 
       <div className="space-y-6">
         <ComponentCard title="Articles List">
-         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
-  <div className="overflow-x-auto">
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+                  <TableRow>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Sr No
+                    </TableCell>
 
-    <Table>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-left text-sm font-semibold"
+                    >
+                      Name
+                    </TableCell>
 
-      <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-        <TableRow>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Published Date
+                    </TableCell>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Sr No
-          </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Status
+                    </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Date
+                    </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Action
+                    </TableCell>
+                  </TableRow>
+                </TableHeader>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-left text-sm font-semibold"
-          >
-            Name
-          </TableCell>
+                <TableBody>
+                  {loading ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={5}
+                        className="py-10 text-center text-gray-500"
+                      >
+                        Loading...
+                      </TableCell>
+                    </TableRow>
+                  ) : items.length > 0 ? (
+                    items.map((item, index) => (
+                      <TableRow
+                        key={item._id}
+                        className="border-b border-gray-100 transition hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
+                      >
+                        <TableCell className="px-6 py-4 text-center font-medium">
+                          {index + 1}
+                        </TableCell>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Published Date
-          </TableCell>
+                        <TableCell className="px-6 py-4 font-medium">
+                          {item.name}
+                        </TableCell>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Status
-          </TableCell>
+                        <TableCell className="px-6 py-4 text-center">
+                          {new Date(item.publishedDate).toLocaleDateString()}
+                        </TableCell>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Action
-          </TableCell>
+                        <TableCell className="px-6 py-4 text-center">
+                          <button onClick={() => handleStatus(item._id)}>
+                            <Badge
+                              size="sm"
+                              color={item.status === 1 ? "success" : "error"}
+                            >
+                              {item.status === 1 ? "Active" : "Inactive"}
+                            </Badge>
+                          </button>
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-center text-gray-600">
+                          {item.createdAt
+                            ? new Date(item.createdAt)
+                                .toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                })
+                                .replace(/\//g, "-")
+                            : "-"}
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <div className="flex items-center justify-center gap-2">
+                            <Link
+                              to={`/edit-article/${item._id}`}
+                              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                            >
+                              Edit
+                            </Link>
 
-        </TableRow>
-      </TableHeader>
-
-      <TableBody>
-
-        {loading ? (
-
-          <TableRow>
-            <TableCell
-              colSpan={5}
-              className="py-10 text-center text-gray-500"
-            >
-              Loading...
-            </TableCell>
-          </TableRow>
-
-        ) : items.length > 0 ? (
-
-          items.map((item, index) => (
-
-            <TableRow
-              key={item._id}
-              className="border-b border-gray-100 transition hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
-            >
-
-              <TableCell className="px-6 py-4 text-center font-medium">
-                {index + 1}
-              </TableCell>
-
-              <TableCell className="px-6 py-4 font-medium">
-                {item.name}
-              </TableCell>
-
-              <TableCell className="px-6 py-4 text-center">
-                {new Date(item.publishedDate).toLocaleDateString()}
-              </TableCell>
-
-              <TableCell className="px-6 py-4 text-center">
-                <button onClick={() => handleStatus(item._id)}>
-                  <Badge
-                    size="sm"
-                    color={item.status === 1 ? "success" : "error"}
-                  >
-                    {item.status === 1 ? "Active" : "Inactive"}
-                  </Badge>
-                </button>
-              </TableCell>
-
-              <TableCell className="px-6 py-4">
-                <div className="flex items-center justify-center gap-2">
-
-                  <Link
-                    to={`/edit-article/${item._id}`}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
-                  >
-                    Edit
-                  </Link>
-
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
-
-                </div>
-              </TableCell>
-
-            </TableRow>
-
-          ))
-
-        ) : (
-
-          <TableRow>
-            <TableCell
-              colSpan={5}
-              className="py-10 text-center text-gray-500"
-            >
-              No Articles Found
-            </TableCell>
-          </TableRow>
-
-        )}
-
-      </TableBody>
-
-    </Table>
-
-  </div>
-</div>
+                            <button
+                              onClick={() => handleDelete(item._id)}
+                              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={5}
+                        className="py-10 text-center text-gray-500"
+                      >
+                        No Articles Found
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
         </ComponentCard>
       </div>
     </>

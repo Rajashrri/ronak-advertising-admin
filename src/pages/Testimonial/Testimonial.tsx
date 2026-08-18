@@ -28,6 +28,7 @@ interface Testimonial {
   briefIntro: string;
   image: string;
   status: number;
+  createdAt: string;
 }
 
 export default function TestimonialList() {
@@ -141,6 +142,12 @@ export default function TestimonialList() {
                       isHeader
                       className="px-6 py-4 text-center text-sm font-semibold"
                     >
+                      Date
+                    </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
                       Action
                     </TableCell>
                   </TableRow>
@@ -196,7 +203,17 @@ export default function TestimonialList() {
                             </Badge>
                           </button>
                         </TableCell>
-
+                        <TableCell className="px-6 py-4 text-center text-gray-600">
+                          {item.createdAt
+                            ? new Date(item.createdAt)
+                                .toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                })
+                                .replace(/\//g, "-")
+                            : "-"}
+                        </TableCell>
                         <TableCell className="px-6 py-4">
                           <div className="flex items-center justify-center gap-2">
                             <Link

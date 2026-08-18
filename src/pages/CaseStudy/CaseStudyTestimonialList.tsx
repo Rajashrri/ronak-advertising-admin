@@ -26,6 +26,7 @@ interface Testimonial {
   designation: string;
   image: string;
   status: number;
+  createdAt: string;
 }
 
 export default function CaseStudyTestimonialList() {
@@ -120,6 +121,12 @@ export default function CaseStudyTestimonialList() {
                     <TableCell isHeader>Name</TableCell>
                     <TableCell isHeader>Designation</TableCell>
                     <TableCell isHeader>Status</TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Date
+                    </TableCell>
                     <TableCell isHeader>Action</TableCell>
                   </TableRow>
                 </TableHeader>
@@ -184,7 +191,17 @@ export default function CaseStudyTestimonialList() {
                             </span>
                           </button>
                         </TableCell>
-
+                        <TableCell className="px-6 py-4 text-center text-gray-600">
+                          {item.createdAt
+                            ? new Date(item.createdAt)
+                                .toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                })
+                                .replace(/\//g, "-")
+                            : "-"}
+                        </TableCell>
                         <TableCell className="px-6 py-4">
                           <div className="flex items-center justify-center gap-2 flex-wrap">
                             <Link

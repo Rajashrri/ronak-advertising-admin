@@ -39,6 +39,7 @@ interface LocationMain {
   latitude: string;
   longitude: string;
   status: number;
+  createdAt: string;
 }
 
 export default function LocationMainList() {
@@ -131,21 +132,26 @@ export default function LocationMainList() {
                     >
                       Location
                     </TableCell>
- <TableCell isHeader>Media Type</TableCell>
+                    <TableCell isHeader>Media Type</TableCell>
                     <TableCell
                       isHeader
                       className="px-6 py-4 text-left text-sm font-semibold"
                     >
                       Site Name
                     </TableCell>
-                   
+
                     <TableCell
                       isHeader
                       className="px-6 py-4 text-center text-sm font-semibold"
                     >
                       Status
                     </TableCell>
-
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Date
+                    </TableCell>
                     <TableCell
                       isHeader
                       className="px-6 py-4 text-center text-sm font-semibold"
@@ -193,7 +199,17 @@ export default function LocationMainList() {
                             </Badge>
                           </button>
                         </TableCell>
-
+                        <TableCell className="px-6 py-4 text-center text-gray-600">
+                          {item.createdAt
+                            ? new Date(item.createdAt)
+                                .toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                })
+                                .replace(/\//g, "-")
+                            : "-"}
+                        </TableCell>
                         <TableCell className="px-6 py-4">
                           <div className="flex items-center justify-center gap-2">
                             <Link

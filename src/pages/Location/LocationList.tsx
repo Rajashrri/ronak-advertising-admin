@@ -26,6 +26,7 @@ interface Location {
   locationName: string;
   image: string;
   status: number;
+  createdAt: string;
 }
 
 export default function LocationList() {
@@ -77,9 +78,7 @@ export default function LocationList() {
         fetchLocations();
       }
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || "Delete failed"
-      );
+      toast.error(error.response?.data?.message || "Delete failed");
     }
   };
 
@@ -94,9 +93,7 @@ export default function LocationList() {
         fetchLocations();
       }
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || "Status update failed"
-      );
+      toast.error(error.response?.data?.message || "Status update failed");
     }
   };
 
@@ -106,135 +103,124 @@ export default function LocationList() {
 
       <div className="space-y-6">
         <ComponentCard title="Location List">
-        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
-  <div className="overflow-x-auto">
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+                  <TableRow>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Sr No
+                    </TableCell>
 
-    <Table>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-left text-sm font-semibold"
+                    >
+                      Location Name
+                    </TableCell>
 
-      <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Status
+                    </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Date
+                    </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Action
+                    </TableCell>
+                  </TableRow>
+                </TableHeader>
 
-        <TableRow>
+                <TableBody>
+                  {loading ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={4}
+                        className="py-10 text-center text-gray-500"
+                      >
+                        Loading...
+                      </TableCell>
+                    </TableRow>
+                  ) : locations.length > 0 ? (
+                    locations.map((item, index) => (
+                      <TableRow
+                        key={item._id}
+                        className="border-b border-gray-100 transition hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
+                      >
+                        <TableCell className="px-6 py-4 text-center font-medium">
+                          {index + 1}
+                        </TableCell>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Sr No
-          </TableCell>
+                        <TableCell className="px-6 py-4 font-medium">
+                          {item.locationName}
+                        </TableCell>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-left text-sm font-semibold"
-          >
-            Location Name
-          </TableCell>
+                        <TableCell className="px-6 py-4 text-center">
+                          <button onClick={() => handleStatus(item._id)}>
+                            <Badge
+                              size="sm"
+                              color={item.status === 1 ? "success" : "error"}
+                            >
+                              {item.status === 1 ? "Active" : "Inactive"}
+                            </Badge>
+                          </button>
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-center text-gray-600">
+                          {item.createdAt
+                            ? new Date(item.createdAt)
+                                .toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                })
+                                .replace(/\//g, "-")
+                            : "-"}
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <div className="flex items-center justify-center gap-2">
+                            <Link
+                              to={`/edit-locationmaster/${item._id}`}
+                              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                            >
+                              Edit
+                            </Link>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Status
-          </TableCell>
-
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Action
-          </TableCell>
-
-        </TableRow>
-
-      </TableHeader>
-
-      <TableBody>
-
-        {loading ? (
-
-          <TableRow>
-
-            <TableCell
-              colSpan={4}
-              className="py-10 text-center text-gray-500"
-            >
-              Loading...
-            </TableCell>
-
-          </TableRow>
-
-        ) : locations.length > 0 ? (
-
-          locations.map((item, index) => (
-
-            <TableRow
-              key={item._id}
-              className="border-b border-gray-100 transition hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
-            >
-
-              <TableCell className="px-6 py-4 text-center font-medium">
-                {index + 1}
-              </TableCell>
-
-              <TableCell className="px-6 py-4 font-medium">
-                {item.locationName}
-              </TableCell>
-
-              <TableCell className="px-6 py-4 text-center">
-                <button onClick={() => handleStatus(item._id)}>
-                  <Badge
-                    size="sm"
-                    color={item.status === 1 ? "success" : "error"}
-                  >
-                    {item.status === 1 ? "Active" : "Inactive"}
-                  </Badge>
-                </button>
-              </TableCell>
-
-              <TableCell className="px-6 py-4">
-                <div className="flex items-center justify-center gap-2">
-
-                  <Link
-                    to={`/edit-locationmaster/${item._id}`}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
-                  >
-                    Edit
-                  </Link>
-
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
-
-                </div>
-              </TableCell>
-
-            </TableRow>
-
-          ))
-
-        ) : (
-
-          <TableRow>
-
-            <TableCell
-              colSpan={4}
-              className="py-10 text-center text-gray-500"
-            >
-              No Location Found
-            </TableCell>
-
-          </TableRow>
-
-        )}
-
-      </TableBody>
-
-    </Table>
-
-  </div>
-</div>
+                            <button
+                              onClick={() => handleDelete(item._id)}
+                              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={4}
+                        className="py-10 text-center text-gray-500"
+                      >
+                        No Location Found
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
         </ComponentCard>
       </div>
     </>

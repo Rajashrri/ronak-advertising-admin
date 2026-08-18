@@ -19,8 +19,7 @@ import {
   getBlogsApi,
   deleteBlogApi,
   changeFeaturedApi,
-    changeBlogStatusApi,
-
+  changeBlogStatusApi,
 } from "../../api/blogApi";
 
 interface Blog {
@@ -31,6 +30,7 @@ interface Blog {
   };
   status: number;
   featured: number;
+  createdAt: string;
 }
 
 export default function BlogList() {
@@ -50,19 +50,17 @@ export default function BlogList() {
   };
 
   const handleStatus = async (id: string) => {
-  try {
-    const response = await changeBlogStatusApi(id);
+    try {
+      const response = await changeBlogStatusApi(id);
 
-    if (response.data.success) {
-      toast.success(response.data.message);
-      fetchBlogs();
+      if (response.data.success) {
+        toast.success(response.data.message);
+        fetchBlogs();
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Status update failed");
     }
-  } catch (error: any) {
-    toast.error(
-      error.response?.data?.message || "Status update failed"
-    );
-  }
-};
+  };
   const fetchBlogs = async () => {
     try {
       setLoading(true);
@@ -154,6 +152,13 @@ export default function BlogList() {
                     >
                       Featured
                     </TableCell>
+
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Date
+                    </TableCell>
                     <TableCell
                       isHeader
                       className="px-6 py-4 text-center text-sm font-semibold"
@@ -191,32 +196,33 @@ export default function BlogList() {
                           <p className="truncate font-medium">{item.title}</p>
                         </TableCell>
 
-                   <TableCell className="px-6 py-4 text-center">
-  <button
-    onClick={() => handleStatus(item._id)}
-    className={`relative inline-flex h-5 w-10 items-center rounded-full transition-all duration-300 ${
-      item.status === 1 ? "bg-green-500" : "bg-gray-300"
-    }`}
-  >
-    <span
-      className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${
-        item.status === 1
-          ? "translate-x-5"
-          : "translate-x-0.5"
-      }`}
-    />
+                        <TableCell className="px-6 py-4 text-center">
+                          <button
+                            onClick={() => handleStatus(item._id)}
+                            className={`relative inline-flex h-5 w-10 items-center rounded-full transition-all duration-300 ${
+                              item.status === 1 ? "bg-green-500" : "bg-gray-300"
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${
+                                item.status === 1
+                                  ? "translate-x-5"
+                                  : "translate-x-0.5"
+                              }`}
+                            />
 
-    <span
-      className={`absolute text-[8px] font-semibold ${
-        item.status === 1
-          ? "left-1 text-white"
-          : "right-1 text-gray-700"
-      }`}
-    >
-      {item.status === 1 ? "ON" : "OFF"}
-    </span>
-  </button>
-</TableCell>
+                            <span
+                              className={`absolute text-[8px] font-semibold ${
+                                item.status === 1
+                                  ? "left-1 text-white"
+                                  : "right-1 text-gray-700"
+                              }`}
+                            >
+                              {item.status === 1 ? "ON" : "OFF"}
+                            </span>
+                          </button>
+                        </TableCell>
+
                         <TableCell className="px-6 py-4 text-center">
                           <button
                             onClick={() => handleFeatured(item._id)}
@@ -244,6 +250,17 @@ export default function BlogList() {
                               {item.featured === 1 ? "ON" : "OFF"}
                             </span>
                           </button>
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-center text-gray-600">
+                          {item.createdAt
+                            ? new Date(item.createdAt)
+                                .toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                })
+                                .replace(/\//g, "-")
+                            : "-"}
                         </TableCell>
                         <TableCell className="px-6 py-4">
                           <div className="flex items-center justify-center gap-2 flex-wrap">

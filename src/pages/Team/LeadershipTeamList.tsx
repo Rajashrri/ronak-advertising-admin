@@ -30,6 +30,7 @@ interface Leadership {
   experience: string;
   linkedin: string;
   status: number;
+  createdAt: string;
 }
 
 export default function LeadershipTeamList() {
@@ -78,9 +79,7 @@ export default function LeadershipTeamList() {
         fetchLeadership();
       }
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || "Delete failed"
-      );
+      toast.error(error.response?.data?.message || "Delete failed");
     }
   };
 
@@ -93,9 +92,7 @@ export default function LeadershipTeamList() {
         fetchLeadership();
       }
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || "Status update failed"
-      );
+      toast.error(error.response?.data?.message || "Status update failed");
     }
   };
 
@@ -105,152 +102,139 @@ export default function LeadershipTeamList() {
 
       <div className="space-y-6">
         <ComponentCard title="Leadership Team List">
-
           <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
-  <div className="overflow-x-auto">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+                  <TableRow>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Sr No
+                    </TableCell>
 
-    <Table>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Image
+                    </TableCell>
 
-      <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-left text-sm font-semibold"
+                    >
+                      Name
+                    </TableCell>
 
-        <TableRow>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Status
+                    </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Date
+                    </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-6 py-4 text-center text-sm font-semibold"
+                    >
+                      Action
+                    </TableCell>
+                  </TableRow>
+                </TableHeader>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Sr No
-          </TableCell>
+                <TableBody>
+                  {loading ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={5}
+                        className="py-10 text-center text-gray-500"
+                      >
+                        Loading...
+                      </TableCell>
+                    </TableRow>
+                  ) : leadership.length > 0 ? (
+                    leadership.map((item, index) => (
+                      <TableRow
+                        key={item._id}
+                        className="border-b border-gray-100 transition-all duration-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
+                      >
+                        <TableCell className="px-6 py-4 text-center font-medium">
+                          {index + 1}
+                        </TableCell>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Image
-          </TableCell>
+                        <TableCell className="px-6 py-4 text-center">
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="mx-auto h-14 w-14 rounded-lg border border-gray-200 object-cover"
+                          />
+                        </TableCell>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-left text-sm font-semibold"
-          >
-            Name
-          </TableCell>
+                        <TableCell className="px-6 py-4 font-medium">
+                          {item.name}
+                        </TableCell>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Status
-          </TableCell>
+                        <TableCell className="px-6 py-4 text-center">
+                          <button onClick={() => handleStatus(item._id)}>
+                            <Badge
+                              size="sm"
+                              color={item.status === 1 ? "success" : "error"}
+                            >
+                              {item.status === 1 ? "Active" : "Inactive"}
+                            </Badge>
+                          </button>
+                        </TableCell>
+                        <TableCell className="px-6 py-4 text-center text-gray-600">
+                          {item.createdAt
+                            ? new Date(item.createdAt)
+                                .toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                })
+                                .replace(/\//g, "-")
+                            : "-"}
+                        </TableCell>
+                        <TableCell className="px-6 py-4">
+                          <div className="flex items-center justify-center gap-2">
+                            <Link
+                              to={`/edit-leadership-team/${item._id}`}
+                              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                            >
+                              Edit
+                            </Link>
 
-          <TableCell
-            isHeader
-            className="px-6 py-4 text-center text-sm font-semibold"
-          >
-            Action
-          </TableCell>
-
-        </TableRow>
-
-      </TableHeader>
-
-      <TableBody>
-
-        {loading ? (
-
-          <TableRow>
-
-            <TableCell
-              colSpan={5}
-              className="py-10 text-center text-gray-500"
-            >
-              Loading...
-            </TableCell>
-
-          </TableRow>
-
-        ) : leadership.length > 0 ? (
-
-          leadership.map((item, index) => (
-
-            <TableRow
-              key={item._id}
-              className="border-b border-gray-100 transition-all duration-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
-            >
-
-              <TableCell className="px-6 py-4 text-center font-medium">
-                {index + 1}
-              </TableCell>
-
-              <TableCell className="px-6 py-4 text-center">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="mx-auto h-14 w-14 rounded-lg border border-gray-200 object-cover"
-                />
-              </TableCell>
-
-              <TableCell className="px-6 py-4 font-medium">
-                {item.name}
-              </TableCell>
-
-              <TableCell className="px-6 py-4 text-center">
-                <button onClick={() => handleStatus(item._id)}>
-                  <Badge
-                    size="sm"
-                    color={item.status === 1 ? "success" : "error"}
-                  >
-                    {item.status === 1 ? "Active" : "Inactive"}
-                  </Badge>
-                </button>
-              </TableCell>
-
-              <TableCell className="px-6 py-4">
-                <div className="flex items-center justify-center gap-2">
-
-                  <Link
-                    to={`/edit-leadership-team/${item._id}`}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
-                  >
-                    Edit
-                  </Link>
-
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
-
-                </div>
-              </TableCell>
-
-            </TableRow>
-
-          ))
-
-        ) : (
-
-          <TableRow>
-
-            <TableCell
-              colSpan={5}
-              className="py-10 text-center text-gray-500"
-            >
-              No Record Found
-            </TableCell>
-
-          </TableRow>
-
-        )}
-
-      </TableBody>
-
-    </Table>
-
-  </div>
-</div>
-
+                            <button
+                              onClick={() => handleDelete(item._id)}
+                              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={5}
+                        className="py-10 text-center text-gray-500"
+                      >
+                        No Record Found
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
         </ComponentCard>
       </div>
     </>
