@@ -792,7 +792,7 @@ span.flatpickr-weekday,
 }
 
 
-.btn {
+.btn, button {
     border: 1px solid var(--200,#ccc);
     width: fit-content;
     height: 60px;
@@ -813,13 +813,13 @@ span.flatpickr-weekday,
     line-height: 22px;
     display: flex;
     width: 100%;
-}
-
-.btn1 {
     transition: all .3s linear
 }
 
-.btn1:hover {
+.btn1 {
+}
+
+.btn:hover , button:hover {
     color: var(--White,#1a1a1a);
     background-color: #fff
 }
