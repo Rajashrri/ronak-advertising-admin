@@ -267,13 +267,17 @@ export default function AddLocationMain() {
                       value={formData.mediaType}
                       onChange={handleChange}
                       className="w-full rounded-lg border p-3"
-                      
                     >
                       <option value="">Select Media Type</option>
+                      <option value="Gantry">Gantry</option>
+                      <option value="Flag">Flag</option>
+
                       <option value="Hoarding">Hoarding</option>
-                      <option value="LED">LED</option>
-                      <option value="BQS">BQS</option>
-                      <option value="Transit Media">Transit Media</option>
+                      <option value="Cantilever">Cantilever</option>
+                      <option value="BQS (Bus Shelter)">
+                        BQS (Bus Shelter)
+                      </option>
+                      <option value="Kiosk">Kiosk</option>
                     </select>
 
                     {errors.mediaType && (
