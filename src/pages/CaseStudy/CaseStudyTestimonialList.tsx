@@ -104,7 +104,7 @@ export default function CaseStudyTestimonialList() {
           <div className="mb-5 flex justify-end">
             <Link
               to={`/add-case-study-testimonial/${caseStudyId}`}
-              className="rounded-lg bg-brand-500 px-4 py-3 text-white hover:bg-brand-600"
+              className="btn1"
             >
               Add Testimonial
             </Link>

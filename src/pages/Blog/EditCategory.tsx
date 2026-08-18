@@ -176,7 +176,7 @@ export default function EditCategory() {
 
                     <button
                       type="submit"
-                      className="rounded-lg bg-brand-500 px-4 py-3 text-white hover:bg-brand-600"
+                      className="btn1"
                     >
                       Update Category
                     </button>
