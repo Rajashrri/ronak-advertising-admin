@@ -36,20 +36,20 @@ export default function AddLeadershipTeam() {
       err.designation = "Designation is required";
     }
 
-    if (!formData.experience.trim()) {
-      err.experience = "Experience is required";
-    }
+    // if (!formData.experience.trim()) {
+    //   err.experience = "Experience is required";
+    // }
 
-    if (!formData.linkedin.trim()) {
-      err.linkedin = "LinkedIn Link is required";
-    } else {
-      const regex =
-        /^(https?:\/\/)?(www\.)?linkedin\.com\/.*$/i;
+    // if (formData.linkedin.trim()) {
+    //   err.linkedin = "LinkedIn Link is required";
+    // } else {
+    //   const regex =
+    //     /^(https?:\/\/)?(www\.)?linkedin\.com\/.*$/i;
 
-      if (!regex.test(formData.linkedin)) {
-        err.linkedin = "Enter valid LinkedIn URL";
-      }
-    }
+    //   if (!regex.test(formData.linkedin)) {
+    //     err.linkedin = "Enter valid LinkedIn URL";
+    //   }
+    // }
 
     if (!image) {
       err.image = "Image is required";
@@ -172,12 +172,12 @@ export default function AddLeadershipTeam() {
                       placeholder="Example : 10+ Years"
                       className="h-11 w-full rounded-lg border px-4"
                     />
-
+{/* 
                     {errors.experience && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.experience}
                       </p>
-                    )}
+                    )} */}
                   </div>
 
                   {/* LinkedIn */}

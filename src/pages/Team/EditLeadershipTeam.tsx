@@ -87,11 +87,11 @@ export default function EditLeadershipTeam() {
     if (!formData.designation.trim())
       err.designation = "Designation is required";
 
-    if (!formData.experience.trim())
-      err.experience = "Experience is required";
+    // if (!formData.experience.trim())
+    //   err.experience = "Experience is required";
 
-    if (!formData.linkedin.trim())
-      err.linkedin = "LinkedIn Link is required";
+    // if (!formData.linkedin.trim())
+    //   err.linkedin = "LinkedIn Link is required";
 
     setErrors(err);
 
@@ -225,11 +225,11 @@ export default function EditLeadershipTeam() {
                       className="h-11 w-full rounded-lg border px-4"
                     />
 
-                    {errors.experience && (
+                    {/* {errors.experience && (
                       <p className="text-red-500">
                         {errors.experience}
                       </p>
-                    )}
+                    )} */}
 
                   </div>
                                     {/* LinkedIn */}
@@ -248,11 +248,11 @@ export default function EditLeadershipTeam() {
                       className="h-11 w-full rounded-lg border px-4"
                     />
 
-                    {errors.linkedin && (
+                    {/* {errors.linkedin && (
                       <p className="text-red-500">
                         {errors.linkedin}
                       </p>
-                    )}
+                    )} */}
                   </div>
 
                   {/* Image */}
