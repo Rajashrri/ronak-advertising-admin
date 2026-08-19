@@ -41,11 +41,18 @@ export const addLocationMainApi = async (data: any) => {
 // =======================
 // LIST
 // =======================
-
-export const getLocationMainListApi = async () => {
-  return locationMainApi.get(
-    "/list-location-main"
-  );
+export const getLocationMainListApi = async (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  return locationMainApi.get("/list-location-main", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
 
 // =======================

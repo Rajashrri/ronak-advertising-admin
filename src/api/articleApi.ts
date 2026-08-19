@@ -19,8 +19,18 @@ export const addArticleApi = async (data: any) => {
 };
 
 // ================= LIST =================
-export const getArticlesApi = async () => {
-  return articleApi.get("/list-articles");
+export const getArticlesApi = async (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  return articleApi.get("/list-articles", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
 
 // ================= DETAIL =================

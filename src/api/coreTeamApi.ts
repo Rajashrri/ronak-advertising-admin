@@ -23,10 +23,18 @@ export const addCoreTeamApi = async (data: FormData) => {
 };
 
 // List
-export const getCoreTeamApi = async () => {
-  return coreTeamApi.get(
-    "/list-core-team"
-  );
+export const getCoreTeamApi = async (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  return coreTeamApi.get("/list-core-team", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
 
 // Detail

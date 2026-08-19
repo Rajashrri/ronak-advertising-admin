@@ -18,9 +18,18 @@ export const addCaseStudyApi = async (data: FormData) => {
   });
 };
 
-// List
-export const getCaseStudiesApi = async () => {
-  return caseStudyApi.get("/list-case-study");
+export const getCaseStudiesApi = async (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  return caseStudyApi.get("/list-case-study", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
 
 // Detail

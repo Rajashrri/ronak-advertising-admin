@@ -23,11 +23,15 @@ export const addBlogApi = async (data) => {
     },
   });
 };
-
-export const getBlogsApi = async () => {
-  return frontApi.get("/list-blog");
+export const getBlogsApi = async (page = 1, limit = 10, search = "") => {
+  return frontApi.get("/list-blog", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
-
 export const deleteBlogApi = async (id) => {
   return frontApi.delete(`/delete-blog/${id}`);
 };
@@ -36,15 +40,11 @@ export const getBlogByIdApi = async (id) => {
   return frontApi.get(`/blog-detail/${id}`);
 };
 export const updateBlogApi = async (id, data) => {
-  return frontApi.put(
-    `/update-blog/${id}`,
-    data,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  return frontApi.put(`/update-blog/${id}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 export const getSeoByIdApi = (id) => {

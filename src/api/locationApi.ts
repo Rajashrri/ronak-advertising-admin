@@ -19,8 +19,18 @@ export const addLocationApi = async (data: any) => {
 };
 
 // ================= LIST =================
-export const getLocationsApi = async () => {
-  return locationApi.get("/list-location");
+export const getLocationsApi = async (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  return locationApi.get("/list-location", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
 
 // ================= DETAIL =================

@@ -32,14 +32,23 @@ export default function BlogCatogery() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
   const fetchCategories = async () => {
     try {
       setLoading(true);
 
-      const response = await getCategoriesApi();
+      const response = await getCategoriesApi(page, limit, search);
 
       if (response.data.success) {
         setCategories(response.data.data);
+
+        setTotalPages(response.data.pagination.totalPages);
+        setTotalRecords(response.data.pagination.total);
       }
     } catch (error) {
       console.log("Category Fetch Error :", error);
@@ -47,10 +56,9 @@ export default function BlogCatogery() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [page, limit, search]);
 
   const handleStatus = async (id: string) => {
     try {
@@ -97,141 +105,258 @@ export default function BlogCatogery() {
 
       <div className="space-y-6">
         <ComponentCard title="Blog Category">
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                  <TableRow>
-                    <TableCell
-                      isHeader
-                      className="px-6 py-4 text-center text-sm font-semibold"
-                    >
-                      Sr No
-                    </TableCell>
+     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
 
-                    <TableCell
-                      isHeader
-                      className="px-6 py-4 text-left text-sm font-semibold"
-                    >
-                      Category Name
-                    </TableCell>
+  {/* Search + Entries */}
+  <div className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
 
-                    <TableCell
-                      isHeader
-                      className="px-6 py-4 text-left text-sm font-semibold"
-                    >
-                      Slug
-                    </TableCell>
+    {/* Search */}
+    <div className="relative w-full sm:w-80">
+      <input
+        type="text"
+        placeholder="Search category..."
+        value={search}
+        onChange={(e) => {
+          setSearch(e.target.value);
+          setPage(1);
+        }}
+        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800"
+      />
+    </div>
 
-                    <TableCell
-                      isHeader
-                      className="px-6 py-4 text-center text-sm font-semibold"
-                    >
-                      Status
-                    </TableCell>
-                    <TableCell
-                      isHeader
-                      className="px-6 py-4 text-center text-sm font-semibold"
-                    >
-                      Date
-                    </TableCell>
-                    <TableCell
-                      isHeader
-                      className="px-6 py-4 text-center text-sm font-semibold"
-                    >
-                      Action
-                    </TableCell>
-                  </TableRow>
-                </TableHeader>
+    {/* Show Entries */}
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-gray-600 dark:text-gray-300">
+        Show
+      </span>
 
-                <TableBody>
-                  {loading ? (
-                    <TableRow>
-                      <TableCell
-                        colSpan={5}
-                        className="py-10 text-center text-gray-500"
-                      >
-                        Loading...
-                      </TableCell>
-                    </TableRow>
-                  ) : categories.length > 0 ? (
-                    categories.map((item, index) => (
-                      <TableRow
-                        key={item._id}
-                        className="border-b border-gray-100 transition-all duration-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
-                      >
-                        <TableCell className="px-6 py-4 text-center font-medium">
-                          {index + 1}
-                        </TableCell>
+      <select
+        value={limit}
+        onChange={(e) => {
+          setLimit(Number(e.target.value));
+          setPage(1);
+        }}
+        className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800"
+      >
+        <option value={5}>5</option>
+        <option value={10}>10</option>
+        <option value={20}>20</option>
+        <option value={50}>50</option>
+      </select>
 
-                        <TableCell className="px-6 py-4 font-medium">
-                          {item.categoryName}
-                        </TableCell>
+      <span className="text-sm text-gray-600 dark:text-gray-300">
+        entries
+      </span>
+    </div>
+  </div>
 
-                        <TableCell className="px-6 py-4 text-gray-600">
-                          {item.slug}
-                        </TableCell>
+  {/* Table */}
+  <div className="overflow-x-auto">
+    <Table>
+      <TableHeader className="border-b border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+        <TableRow>
 
-                        <TableCell className="px-6 py-4 text-center">
-                          <button
-                            onClick={() => handleStatus(item._id)}
-                            className={`relative inline-flex h-5 w-10 items-center rounded-full transition ${
-                              item.status === 1 ? "bg-green-500" : "bg-gray-300"
-                            }`}
-                          >
-                            <span
-                              className={`inline-block h-4 w-4 rounded-full bg-white shadow transform transition ${
-                                item.status === 1
-                                  ? "translate-x-5"
-                                  : "translate-x-0.5"
-                              }`}
-                            />
-                          </button>
-                        </TableCell>
-                        <TableCell className="px-6 py-4 text-center text-gray-600">
-                          {item.createdAt
-                            ? new Date(item.createdAt)
-                                .toLocaleDateString("en-GB", {
-                                  day: "2-digit",
-                                  month: "2-digit",
-                                  year: "numeric",
-                                })
-                                .replace(/\//g, "-")
-                            : "-"}
-                        </TableCell>
-                        <TableCell className="px-6 py-4">
-                          <div className="flex items-center justify-center gap-2">
-                            <Link
-                              to={`/edit-category/${item._id}`}
-                              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
-                            >
-                              Edit
-                            </Link>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Sr No
+          </TableCell>
 
-                            <button
-                              onClick={() => handleDelete(item._id)}
-                              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={5}
-                        className="py-10 text-center text-gray-500"
-                      >
-                        No Category Found
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-left text-sm font-semibold"
+          >
+            Category Name
+          </TableCell>
+
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-left text-sm font-semibold"
+          >
+            Slug
+          </TableCell>
+
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Status
+          </TableCell>
+
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Date
+          </TableCell>
+
+          <TableCell
+            isHeader
+            className="px-6 py-4 text-center text-sm font-semibold"
+          >
+            Action
+          </TableCell>
+
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        {loading ? (
+          <TableRow>
+            <TableCell
+              colSpan={6}
+              className="py-10 text-center text-gray-500"
+            >
+              Loading...
+            </TableCell>
+          </TableRow>
+        ) : categories.length > 0 ? (
+          categories.map((item, index) => (
+            <TableRow
+              key={item._id}
+              className="border-b border-gray-100 transition-all duration-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
+            >
+
+              <TableCell className="px-6 py-4 text-center font-medium">
+                {(page - 1) * limit + index + 1}
+              </TableCell>
+
+              <TableCell className="px-6 py-4 font-medium">
+                {item.categoryName}
+              </TableCell>
+
+              <TableCell className="px-6 py-4 text-gray-600">
+                {item.slug}
+              </TableCell>
+
+              <TableCell className="px-6 py-4 text-center">
+                <button
+                  onClick={() => handleStatus(item._id)}
+                  className={`relative inline-flex h-5 w-10 items-center rounded-full transition ${
+                    item.status === 1
+                      ? "bg-green-500"
+                      : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 rounded-full bg-white shadow transform transition ${
+                      item.status === 1
+                        ? "translate-x-5"
+                        : "translate-x-0.5"
+                    }`}
+                  />
+                </button>
+              </TableCell>
+
+              <TableCell className="px-6 py-4 text-center text-gray-600">
+                {item.createdAt
+                  ? new Date(item.createdAt)
+                      .toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })
+                      .replace(/\//g, "-")
+                  : "-"}
+              </TableCell>
+
+              <TableCell className="px-6 py-4">
+                <div className="flex items-center justify-center gap-2">
+                  <Link
+                    to={`/edit-category/${item._id}`}
+                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                  >
+                    Edit
+                  </Link>
+
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </TableCell>
+
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell
+              colSpan={6}
+              className="py-10 text-center text-gray-500"
+            >
+              No Category Found
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  </div>
+
+  {/* Pagination */}
+  <div className="flex flex-col gap-4 border-t border-gray-200 px-6 py-5 sm:flex-row sm:items-center sm:justify-between dark:border-gray-700">
+
+    <div className="text-sm text-gray-600 dark:text-gray-300">
+      Showing{" "}
+      {totalRecords === 0
+        ? 0
+        : (page - 1) * limit + 1}{" "}
+      to{" "}
+      {Math.min(page * limit, totalRecords)}{" "}
+      of {totalRecords} entries
+    </div>
+
+    <div className="flex items-center gap-2">
+
+      <button
+        disabled={page === 1}
+        onClick={() => setPage((prev) => prev - 1)}
+        className={`rounded-lg border px-4 py-2 text-sm font-medium transition ${
+          page === 1
+            ? "cursor-not-allowed bg-gray-100 text-gray-400"
+            : "bg-white text-gray-700 hover:bg-gray-100"
+        }`}
+      >
+        Previous
+      </button>
+
+      {Array.from(
+        { length: totalPages },
+        (_, index) => index + 1
+      ).map((pageNumber) => (
+        <button
+          key={pageNumber}
+          onClick={() => setPage(pageNumber)}
+          className={`rounded-lg px-4 py-2 text-sm font-medium ${
+            page === pageNumber
+              ? "bg-blue-600 text-white"
+              : "border bg-white text-gray-700 hover:bg-gray-100"
+          }`}
+        >
+          {pageNumber}
+        </button>
+      ))}
+
+      <button
+        disabled={
+          page === totalPages || totalPages === 0
+        }
+        onClick={() => setPage((prev) => prev + 1)}
+        className={`rounded-lg border px-4 py-2 text-sm font-medium transition ${
+          page === totalPages || totalPages === 0
+            ? "cursor-not-allowed bg-gray-100 text-gray-400"
+            : "bg-white text-gray-700 hover:bg-gray-100"
+        }`}
+      >
+        Next
+      </button>
+
+    </div>
+  </div>
+
+</div>
         </ComponentCard>
       </div>
     </>

@@ -17,8 +17,19 @@ export const addCaseStudyTestimonialApi = async (data: FormData) => {
   });
 };
 
-export const getCaseStudyTestimonialsApi = async (caseStudyId: string) => {
-  return api.get(`/list-case-study-testimonial/${caseStudyId}`);
+export const getCaseStudyTestimonialsApi = async (
+  caseStudyId: string,
+  page: number,
+  limit: number,
+  search: string
+) => {
+  return api.get(`/list-case-study-testimonial/${caseStudyId}`, {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
 
 export const getCaseStudyTestimonialByIdApi = async (id: string) => {

@@ -23,10 +23,18 @@ export const addMediaCoverageApi = async (data: any) => {
 };
 
 // List
-export const getMediaCoverageApi = async () => {
-  return mediaCoverageApi.get(
-    "/list-media-coverage"
-  );
+export const getMediaCoverageApi = async (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  return mediaCoverageApi.get("/list-media-coverage", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
 
 // Detail

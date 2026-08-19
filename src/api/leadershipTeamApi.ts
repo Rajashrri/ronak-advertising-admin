@@ -23,11 +23,19 @@ export const addLeadershipApi = async (data: any) => {
 
 // ================= LIST =================
 
-export const getLeadershipApi = async () => {
-  return leadershipApi.get("/list");
+export const getLeadershipApi = async (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  return leadershipApi.get("/list", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
-
-
 // ================= DETAIL =================
 
 export const getLeadershipDetailApi = async (

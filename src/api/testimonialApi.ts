@@ -17,8 +17,18 @@ export const addTestimonialApi = async (data: any) => {
   });
 };
 
-export const getTestimonialsApi = async () => {
-  return testimonialApi.get("/list-testimonial");
+export const getTestimonialsApi = async (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  return testimonialApi.get("/list-testimonial", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
 
 export const getTestimonialByIdApi = async (id: string) => {

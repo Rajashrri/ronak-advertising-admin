@@ -15,8 +15,14 @@ export const addCategoryApi = async (data) => {
 };
 
 // Category List
-export const getCategoriesApi = async () => {
-  return frontApi.get("/list");
+export const getCategoriesApi = async (page = 1, limit = 10, search = "") => {
+  return frontApi.get("/list", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
 };
 
 // Single Category
@@ -35,7 +41,5 @@ export const deleteCategoryApi = async (id) => {
 };
 
 export const changeCategoryStatusApi = async (id) => {
-  return frontApi.patch(
-    `/change-status/${id}`
-  );
+  return frontApi.patch(`/change-status/${id}`);
 };

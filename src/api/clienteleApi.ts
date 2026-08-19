@@ -7,9 +7,19 @@ const clienteleApi = axios.create({
 export const addClientApi = (data: FormData) =>
   clienteleApi.post("/add-client", data);
 
-export const getClientApi = () =>
-  clienteleApi.get("/list-client");
-
+export const getClientApi = (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  return clienteleApi.get("/list-client", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
+};
 export const getClientDetailApi = (id: string) =>
   clienteleApi.get(`/client-detail/${id}`);
 

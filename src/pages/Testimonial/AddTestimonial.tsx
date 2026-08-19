@@ -37,7 +37,6 @@ export default function AddTestimonial() {
     if (!formData.briefIntro.trim())
       err.briefIntro = "Brief Intro is required";
 
-    if (!image) err.image = "Image is required";
 
     setErrors(err);
 
@@ -133,9 +132,6 @@ export default function AddTestimonial() {
                       }
                     />
 
-                    {errors.image && (
-                      <p className="text-red-500">{errors.image}</p>
-                    )}
                   </div>
 
                   <div>
