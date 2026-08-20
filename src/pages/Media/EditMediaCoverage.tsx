@@ -73,13 +73,7 @@ export default function EditMediaCoverage() {
 
     let err: any = {};
 
-    if (!formData.name.trim()) err.name = "Name is required";
-
-    if (!formData.publishedDate.trim())
-      err.publishedDate = "Published Date is required";
-
-    if (!formData.sourceName.trim()) err.sourceName = "Source Name is required";
-
+  
     setErrors(err);
 
     if (Object.keys(err).length > 0) return;
@@ -128,9 +122,7 @@ export default function EditMediaCoverage() {
                       className="h-11 w-full rounded-lg border px-4"
                     />
 
-                    {errors.name && (
-                      <p className="text-red-500">{errors.name}</p>
-                    )}
+                   
                   </div>
 
                   {/* Published Date */}
@@ -145,9 +137,7 @@ export default function EditMediaCoverage() {
                       className="h-11 w-full rounded-lg border px-4"
                     />
 
-                    {errors.publishedDate && (
-                      <p className="text-red-500">{errors.publishedDate}</p>
-                    )}
+                   
                   </div>
 
                   {/* Source Name */}
@@ -162,9 +152,6 @@ export default function EditMediaCoverage() {
                       className="h-11 w-full rounded-lg border px-4"
                     />
 
-                    {errors.sourceName && (
-                      <p className="text-red-500">{errors.sourceName}</p>
-                    )}
                   </div>
 
                   {/* Image */}
