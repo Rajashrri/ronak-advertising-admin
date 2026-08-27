@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, Link } from "react-router";
 import { toast } from "react-toastify";
-import { Link } from "react-router";
 
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
@@ -21,14 +20,19 @@ export default function EditMediaCoverage() {
     sourceName: "",
   });
 
+  // Main Image
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState("");
+
+  // Preview Image
+  const [previewImage, setPreviewImage] = useState<File | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState("");
 
   const [errors, setErrors] = useState<any>({});
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [id]);
 
   const fetchData = async () => {
     try {
@@ -38,28 +42,37 @@ export default function EditMediaCoverage() {
         const data = res.data.data;
 
         setFormData({
-          name: data.name,
+          name: data.name || "",
           publishedDate: data.publishedDate
             ? data.publishedDate.split("T")[0]
             : "",
-          sourceName: data.sourceName,
+          sourceName: data.sourceName || "",
         });
 
-        setImagePreview(data.image);
+        // Existing Main Image
+        setImagePreview(data.image || "");
+
+        // Existing Preview Image
+        setPreviewImageUrl(data.imagePreview || "");
       }
     } catch (error) {
       toast.error("Failed to load data");
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Main Image Change
+  const handleImage = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
 
     if (file) {
@@ -68,12 +81,25 @@ export default function EditMediaCoverage() {
     }
   };
 
-  const handleSubmit = async (e: any) => {
+  // Preview Image Change
+  const handlePreviewImage = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      setPreviewImage(file);
+      setPreviewImageUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
 
     let err: any = {};
 
-  
     setErrors(err);
 
     if (Object.keys(err).length > 0) return;
@@ -82,21 +108,41 @@ export default function EditMediaCoverage() {
       const data = new FormData();
 
       data.append("name", formData.name);
-      data.append("publishedDate", formData.publishedDate);
-      data.append("sourceName", formData.sourceName);
+      data.append(
+        "publishedDate",
+        formData.publishedDate
+      );
+      data.append(
+        "sourceName",
+        formData.sourceName
+      );
 
+      // New Main Image
       if (image) {
         data.append("image", image);
       }
 
-      const response = await updateMediaCoverageApi(id!, data);
+      // New Preview Image
+      if (previewImage) {
+        data.append(
+          "imagePreview",
+          previewImage
+        );
+      }
+
+      const response =
+        await updateMediaCoverageApi(id!, data);
 
       if (response.data.success) {
         toast.success(response.data.message);
+
         navigate("/list-mediacoverage");
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Update failed");
+      toast.error(
+        error.response?.data?.message ||
+          "Update failed"
+      );
     }
   };
 
@@ -110,9 +156,12 @@ export default function EditMediaCoverage() {
             <div className="p-6">
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 gap-6">
+
                   {/* Name */}
                   <div>
-                    <label className="mb-1.5 block">Name</label>
+                    <label className="mb-1.5 block">
+                      Name
+                    </label>
 
                     <input
                       type="text"
@@ -121,13 +170,13 @@ export default function EditMediaCoverage() {
                       onChange={handleChange}
                       className="h-11 w-full rounded-lg border px-4"
                     />
-
-                   
                   </div>
 
                   {/* Published Date */}
                   <div>
-                    <label className="mb-1.5 block">Published Date</label>
+                    <label className="mb-1.5 block">
+                      Published Date
+                    </label>
 
                     <input
                       type="date"
@@ -136,13 +185,13 @@ export default function EditMediaCoverage() {
                       onChange={handleChange}
                       className="h-11 w-full rounded-lg border px-4"
                     />
-
-                   
                   </div>
 
                   {/* Source Name */}
                   <div>
-                    <label className="mb-1.5 block">Source Name</label>
+                    <label className="mb-1.5 block">
+                      Source Name
+                    </label>
 
                     <input
                       type="text"
@@ -151,35 +200,72 @@ export default function EditMediaCoverage() {
                       onChange={handleChange}
                       className="h-11 w-full rounded-lg border px-4"
                     />
-
                   </div>
 
-                  {/* Image */}
+                  {/* Main Image */}
                   <div>
-                    <label className="mb-1.5 block">Image</label>
+                    <label className="mb-1.5 block">
+                      Image
+                    </label>
 
                     <input
                       type="file"
+                      name="image"
                       accept="image/*"
                       onChange={handleImage}
                     />
+
+                    {errors.image && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {errors.image}
+                      </p>
+                    )}
+
+                    {/* Main Image Preview */}
+                    {imagePreview && (
+                      <div className="mt-3">
+                        <img
+                          src={imagePreview}
+                          alt="Main Image"
+                          className="h-32 w-32 rounded-lg border object-cover"
+                        />
+                      </div>
+                    )}
                   </div>
 
-                  {/* Preview */}
-                  {imagePreview && (
-                    <div>
-                      <label className="mb-2 block">Preview</label>
+                  {/* Image Preview */}
+                  <div>
+                    <label className="mb-1.5 block">
+                      Image Preview
+                    </label>
 
-                      <img
-                        src={imagePreview}
-                        alt="preview"
-                        className="h-32 w-32 rounded-lg border object-cover"
-                      />
-                    </div>
-                  )}
+                    <input
+                      type="file"
+                      name="imagePreview"
+                      accept="image/*"
+                      onChange={handlePreviewImage}
+                    />
 
-                  {/* Submit */}
-                 <div className="mt-6 flex justify-start gap-3">
+                    {errors.imagePreview && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {errors.imagePreview}
+                      </p>
+                    )}
+
+                    {/* Preview Image */}
+                    {previewImageUrl && (
+                      <div className="mt-3">
+                        <img
+                          src={previewImageUrl}
+                          alt="Image Preview"
+                          className="h-32 w-32 rounded-lg border object-cover"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="mt-6 flex justify-start gap-3">
                     <Link
                       to="/list-mediacoverage"
                       className="btn2"
@@ -191,9 +277,23 @@ export default function EditMediaCoverage() {
                       type="submit"
                       className="btn1"
                     >
-                      Update <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.9766 5.96094L7.60156 10.3359C7.4375 10.5 7.21875 10.582 7 10.582C6.75391 10.582 6.53516 10.5 6.37109 10.3359C6.01562 10.0078 6.01562 9.43359 6.37109 9.10547L9.24219 6.20703H0.875C0.382812 6.20703 0 5.82422 0 5.33203C0 4.86719 0.382812 4.45703 0.875 4.45703H9.24219L6.37109 1.58594C6.01562 1.25781 6.01562 0.683594 6.37109 0.355469C6.69922 0 7.27344 0 7.60156 0.355469L11.9766 4.73047C12.332 5.05859 12.332 5.63281 11.9766 5.96094Z" fill="white"></path></svg>
+                      Update
+
+                      <svg
+                        width="13"
+                        height="11"
+                        viewBox="0 0 13 11"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M11.9766 5.96094L7.60156 10.3359C7.4375 10.5 7.21875 10.582 7 10.582C6.75391 10.582 6.53516 10.5 6.37109 10.3359C6.01562 10.0078 6.01562 9.43359 6.37109 9.10547L9.24219 6.20703H0.875C0.382812 6.20703 0 5.82422 0 5.33203C0 4.86719 0.382812 4.45703 0.875 4.45703H9.24219L6.37109 1.58594C6.01562 1.25781 6.01562 0.683594 6.37109 0.355469C6.69922 0 7.27344 0 7.60156 0.355469L11.9766 4.73047C12.332 5.05859 12.332 5.63281 11.9766 5.96094Z"
+                          fill="white"
+                        />
+                      </svg>
                     </button>
                   </div>
+
                 </div>
               </form>
             </div>

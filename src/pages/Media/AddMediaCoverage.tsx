@@ -17,12 +17,10 @@ export default function AddMediaCoverage() {
   });
 
   const [image, setImage] = useState<File | null>(null);
-
+  const [imagePreview, setImagePreview] = useState<File | null>(null);
   const [errors, setErrors] = useState<any>({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -34,7 +32,6 @@ export default function AddMediaCoverage() {
 
     let err: any = {};
 
-    
     if (!image) err.image = "Image is required";
 
     setErrors(err);
@@ -45,16 +42,16 @@ export default function AddMediaCoverage() {
       const data = new FormData();
 
       data.append("name", formData.name);
-      data.append(
-        "publishedDate",
-        formData.publishedDate
-      );
+      data.append("publishedDate", formData.publishedDate);
       data.append("sourceName", formData.sourceName);
 
       if (image) {
         data.append("image", image);
       }
 
+      if (imagePreview) {
+        data.append("imagePreview", imagePreview);
+      }
       const response = await addMediaCoverageApi(data);
 
       if (response.data.success) {
@@ -63,10 +60,7 @@ export default function AddMediaCoverage() {
         navigate("/list-mediacoverage");
       }
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          "Something went wrong"
-      );
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -80,7 +74,6 @@ export default function AddMediaCoverage() {
             <div className="p-6">
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 gap-6">
-
                   {/* Name */}
                   <div>
                     <label className="mb-1.5 block text-sm font-medium">
@@ -94,8 +87,6 @@ export default function AddMediaCoverage() {
                       onChange={handleChange}
                       className="h-11 w-full rounded-lg border px-4"
                     />
-
-                   
                   </div>
 
                   {/* Published Date */}
@@ -111,8 +102,6 @@ export default function AddMediaCoverage() {
                       onChange={handleChange}
                       className="h-11 w-full rounded-lg border px-4"
                     />
-
-                    
                   </div>
 
                   {/* Source Name */}
@@ -128,8 +117,6 @@ export default function AddMediaCoverage() {
                       onChange={handleChange}
                       className="h-11 w-full rounded-lg border px-4"
                     />
-
-                  
                   </div>
 
                   {/* Image */}
@@ -140,34 +127,59 @@ export default function AddMediaCoverage() {
 
                     <input
                       type="file"
+                      name="image"
                       accept="image/*"
-                      onChange={(e) =>
-                        setImage(
-                          e.target.files?.[0] || null
-                        )
-                      }
+                      onChange={(e) => setImage(e.target.files?.[0] || null)}
                       className="w-full"
                     />
 
                     {errors.image && (
-                      <p className="text-red-500">
+                      <p className="mt-1 text-sm text-red-500">
                         {errors.image}
                       </p>
                     )}
                   </div>
 
-                  {/* Submit */}
-              <div className="mt-6 flex justify-start gap-3">
-               
+                  {/* Image Preview */}
+                  <div>
+                    <label className="mb-1.5 block text-sm font-medium">
+                      Image Preview
+                    </label>
 
-                    <button
-                      type="submit"
-                      className="btn1"
-                    >
-                      Add <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.9766 5.96094L7.60156 10.3359C7.4375 10.5 7.21875 10.582 7 10.582C6.75391 10.582 6.53516 10.5 6.37109 10.3359C6.01562 10.0078 6.01562 9.43359 6.37109 9.10547L9.24219 6.20703H0.875C0.382812 6.20703 0 5.82422 0 5.33203C0 4.86719 0.382812 4.45703 0.875 4.45703H9.24219L6.37109 1.58594C6.01562 1.25781 6.01562 0.683594 6.37109 0.355469C6.69922 0 7.27344 0 7.60156 0.355469L11.9766 4.73047C12.332 5.05859 12.332 5.63281 11.9766 5.96094Z" fill="white"></path></svg>
+                    <input
+                      type="file"
+                      name="imagePreview"
+                      accept="image/*"
+                      onChange={(e) =>
+                        setImagePreview(e.target.files?.[0] || null)
+                      }
+                      className="w-full"
+                    />
+
+                    {errors.imagePreview && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {errors.imagePreview}
+                      </p>
+                    )}
+                  </div>
+                  {/* Submit */}
+                  <div className="mt-6 flex justify-start gap-3">
+                    <button type="submit" className="btn1">
+                      Add{" "}
+                      <svg
+                        width="13"
+                        height="11"
+                        viewBox="0 0 13 11"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M11.9766 5.96094L7.60156 10.3359C7.4375 10.5 7.21875 10.582 7 10.582C6.75391 10.582 6.53516 10.5 6.37109 10.3359C6.01562 10.0078 6.01562 9.43359 6.37109 9.10547L9.24219 6.20703H0.875C0.382812 6.20703 0 5.82422 0 5.33203C0 4.86719 0.382812 4.45703 0.875 4.45703H9.24219L6.37109 1.58594C6.01562 1.25781 6.01562 0.683594 6.37109 0.355469C6.69922 0 7.27344 0 7.60156 0.355469L11.9766 4.73047C12.332 5.05859 12.332 5.63281 11.9766 5.96094Z"
+                          fill="white"
+                        ></path>
+                      </svg>
                     </button>
                   </div>
-
                 </div>
               </form>
             </div>
