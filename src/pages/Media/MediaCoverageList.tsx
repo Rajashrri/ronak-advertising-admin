@@ -66,18 +66,20 @@ export default function MediaCoverageList() {
   useEffect(() => {
     fetchData();
   }, [page, limit, search]);
-  const handleFeatured = async (id: string) => {
-    try {
-      const res = await changeMediaCoverageFeaturedApi(id);
+ const handleFeatured = async (id: string) => {
+  try {
+    const res = await changeMediaCoverageFeaturedApi(id);
 
-      if (res.data.success) {
-        toast.success(res.data.message);
-        fetchData();
-      }
-    } catch (error) {
-      toast.error("Featured update failed");
+    if (res.data.success) {
+      toast.success(res.data.message);
+      fetchData();
     }
-  };
+  } catch (error: any) {
+    toast.error(
+      error?.response?.data?.message || "Featured update failed"
+    );
+  }
+};
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: "Are you sure?",
