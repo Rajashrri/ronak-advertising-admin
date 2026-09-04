@@ -105,14 +105,30 @@ export default function AddLocationMain() {
   // ===========================
   // GALLERY
   // ===========================
+const addGalleryFiles = (files: File[]) => {
+  const imageFiles = files.filter((file) =>
+    file.type.startsWith("image/")
+  );
 
-  const addGalleryFiles = (files: File[]) => {
-    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+  if (!imageFiles.length) return;
 
-    if (!imageFiles.length) return;
+  const totalImages = gallery.length + imageFiles.length;
 
-    setGallery((prev) => [...prev, ...imageFiles]);
-  };
+  if (totalImages > 10) {
+    setErrors((prev: any) => ({
+      ...prev,
+      gallery: "You can upload maximum 10 images only.",
+    }));
+    return;
+  }
+
+  setErrors((prev: any) => ({
+    ...prev,
+    gallery: "",
+  }));
+
+  setGallery((prev) => [...prev, ...imageFiles]);
+};
 
   const handleGallery = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -360,14 +376,20 @@ export default function AddLocationMain() {
 
                   <div className="md:col-span-2">
                     <label className="mb-2 block text-sm font-medium">
-                      Media Gallery Images
+                      Media Gallery Images<p className="mb-3 text-sm text-red-500">
+  (Maximum 10 images allowed.)
+</p>
                     </label>
 
                     <p className="mb-3 text-sm text-gray-500">
                       You can select images one by one, select multiple images,
                       or drag & drop images here.
                     </p>
-
+{errors.gallery && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.gallery}
+  </p>
+)}
                     {/* Drag & Drop Area */}
                     <div
                       onDragOver={handleDragOver}
