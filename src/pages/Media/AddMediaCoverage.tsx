@@ -21,12 +21,17 @@ export default function AddMediaCoverage() {
   const [imagePreview, setImagePreview] = useState<File | null>(null);
   const [errors, setErrors] = useState<any>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+
+const handleChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+};
+
+
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
