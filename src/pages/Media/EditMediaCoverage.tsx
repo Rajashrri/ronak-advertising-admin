@@ -18,6 +18,7 @@ export default function EditMediaCoverage() {
     name: "",
     publishedDate: "",
     sourceName: "",
+    briefIntro:""
   });
 
   // Main Image
@@ -47,6 +48,9 @@ export default function EditMediaCoverage() {
             ? data.publishedDate.split("T")[0]
             : "",
           sourceName: data.sourceName || "",
+                    briefIntro: data.briefIntro || "",
+
+          
         });
 
         // Existing Main Image
@@ -116,6 +120,11 @@ export default function EditMediaCoverage() {
         "sourceName",
         formData.sourceName
       );
+   data.append(
+        "briefIntro",
+        formData.briefIntro
+      );
+      
 
       // New Main Image
       if (image) {
@@ -263,7 +272,17 @@ export default function EditMediaCoverage() {
                       </div>
                     )}
                   </div>
-
+ <div>
+                <label>Brief Intro</label>
+                <textarea
+                  name="briefIntro"
+                  value={formData.briefIntro}
+                   onChange={handleChange}
+                  className="w-full border rounded-lg p-2"
+                  rows={4}
+                />
+              
+              </div>
                   {/* Buttons */}
                   <div className="mt-6 flex justify-start gap-3">
                     <Link

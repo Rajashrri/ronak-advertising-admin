@@ -14,6 +14,7 @@ export default function AddMediaCoverage() {
     name: "",
     publishedDate: "",
     sourceName: "",
+    briefIntro:""
   });
 
   const [image, setImage] = useState<File | null>(null);
@@ -33,6 +34,7 @@ export default function AddMediaCoverage() {
     let err: any = {};
 
     if (!image) err.image = "Image is required";
+    if (!imagePreview) err.imagePreview = "Image Preview is required";
 
     setErrors(err);
 
@@ -45,6 +47,9 @@ export default function AddMediaCoverage() {
       data.append("publishedDate", formData.publishedDate);
       data.append("sourceName", formData.sourceName);
 
+      data.append("briefIntro", formData.briefIntro);
+
+      
       if (image) {
         data.append("image", image);
       }
@@ -162,6 +167,20 @@ export default function AddMediaCoverage() {
                       </p>
                     )}
                   </div>
+
+                      {/* Brief Intro */}
+              <div>
+                <label>Brief Intro</label>
+                <textarea
+                  name="briefIntro"
+                  value={formData.briefIntro}
+                   onChange={handleChange}
+                  className="w-full border rounded-lg p-2"
+                  rows={4}
+                />
+              
+              </div>
+
                   {/* Submit */}
                   <div className="mt-6 flex justify-start gap-3">
                     <button type="submit" className="btn1">
