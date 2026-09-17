@@ -346,7 +346,9 @@ export default function AddLocationMain() {
                       accept="image/*"
                       onChange={handleImage}
                     />
-
+                    <p className="text-red-500 text-sm mt-1">
+                      Image Size: 582 × 369 px | Allowed Extension: .webp
+                    </p>
                     {errors.image && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.image}
@@ -407,7 +409,9 @@ export default function AddLocationMain() {
                         onChange={handleGallery}
                         className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                       />
-
+<p className="text-red-500 text-sm mt-1">
+  Image Size: 1236 × 486 px | Allowed Extensions: .webp, .jpg, .jpeg
+</p>
                       <div className="text-center">
                         <div className="mb-3 text-4xl">📁</div>
 
