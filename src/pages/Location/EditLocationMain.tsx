@@ -223,13 +223,15 @@ export default function EditLocationMain() {
     if (!formData.mediaType) err.mediaType = "Select Media Type";
 
    
-      // Image extension validation
-      const allowedExtensions = ["webp", "jpg", "jpeg"];
-      const fileExtension = image.name.split(".").pop()?.toLowerCase();
+     // Image extension validation - only if new image is selected
+if (image) {
+  const allowedExtensions = ["webp", "jpg", "jpeg"];
+  const fileExtension = image.name.split(".").pop()?.toLowerCase();
 
-      if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
-        err.image = "Only .webp, .jpg and .jpeg images are allowed";
-      }
+  if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+    err.image = "Only .webp, .jpg and .jpeg images are allowed";
+  }
+}
     
 
     if (!formData.siteName.trim()) err.siteName = "Site Name is required";
