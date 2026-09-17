@@ -393,8 +393,9 @@ export default function EditLocationMain() {
                       onChange={handleImage}
                     />
                     <p className="text-red-500 text-sm mt-1">
-  Image Size: 582 × 369 px | Allowed Extension: .webp
-</p>
+                      Image Size: 582 × 369 px | Allowed Extension: .webp, .jpg,
+                      .jpeg
+                    </p>
                   </div>
 
                   {/* YouTube */}
@@ -422,9 +423,10 @@ export default function EditLocationMain() {
                       <p className="mb-3 text-sm text-red-500">
                         (Maximum 10 images allowed.)
                       </p>
-                       <p className="text-red-500 text-sm mt-1">
-  Image Size: 1236 × 486 px | Allowed Extensions: .webp, .jpg, .jpeg
-</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        Image Size: 1236 × 486 px | Allowed Extensions: .webp,
+                        .jpg, .jpeg
+                      </p>
                     </label>
 
                     {/* ================= EXISTING GALLERY ================= */}
