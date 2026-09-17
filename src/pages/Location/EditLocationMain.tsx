@@ -222,9 +222,7 @@ export default function EditLocationMain() {
     if (!formData.locationId) err.locationId = "Select Location";
     if (!formData.mediaType) err.mediaType = "Select Media Type";
 
-    if (!image) {
-      err.image = "Image is required";
-    } else {
+   
       // Image extension validation
       const allowedExtensions = ["webp", "jpg", "jpeg"];
       const fileExtension = image.name.split(".").pop()?.toLowerCase();
@@ -232,7 +230,7 @@ export default function EditLocationMain() {
       if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
         err.image = "Only .webp, .jpg and .jpeg images are allowed";
       }
-    }
+    
 
     if (!formData.siteName.trim()) err.siteName = "Site Name is required";
 
