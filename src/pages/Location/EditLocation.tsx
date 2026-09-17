@@ -77,11 +77,7 @@ export default function EditLocation() {
     if (!formData.ideal) {
       err.ideal = "Ideal for is required";
     }
-
-    if (!image) {
-      err.image = "Image is required";
-    } else {
-      // Image extension validation
+    if (image) {
       const allowedExtensions = ["webp", "jpg", "jpeg"];
       const fileExtension = image.name.split(".").pop()?.toLowerCase();
 
@@ -89,6 +85,7 @@ export default function EditLocation() {
         err.image = "Only .webp, .jpg and .jpeg images are allowed";
       }
     }
+
     setErrors(err);
 
     return Object.keys(err).length === 0;
