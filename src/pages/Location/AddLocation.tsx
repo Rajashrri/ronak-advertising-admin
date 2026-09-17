@@ -42,6 +42,14 @@ export default function AddLocation() {
     }
     if (!image) {
       err.image = "Image is required";
+    } else {
+      // Image extension validation
+      const allowedExtensions = ["webp", "jpg", "jpeg"];
+      const fileExtension = image.name.split(".").pop()?.toLowerCase();
+
+      if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+        err.image = "Only .webp, .jpg and .jpeg images are allowed";
+      }
     }
 
     setErrors(err);
