@@ -397,8 +397,7 @@ export default function EditLocationMain() {
                       Replace Image
                     </label>
                     <p className="text-red-500 text-sm mt-1">
-                      Image Size: 582 × 369 px | Allowed Extension: .webp, .jpg,
-                      .jpeg
+                      Image Size: 582 × 369 px | Allowed Extension: .webp
                     </p>
                     <input
                       type="file"
@@ -438,8 +437,8 @@ export default function EditLocationMain() {
                         (Maximum 10 images allowed.)
                       </p>
                       <p className="text-red-500 text-sm mt-1">
-                        Image Size: 1236 × 486 px | Allowed Extensions: .webp,
-                        .jpg, .jpeg
+                        Image Size: 1236 × 486 px | Allowed Extensions: .webp
+                       
                       </p>
                     </label>
 
