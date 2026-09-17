@@ -172,7 +172,18 @@ export default function AddLocationMain() {
 
     if (!formData.siteName.trim()) err.siteName = "Site Name required";
 
-    if (!image) err.image = "Image required";
+    if (!image) {
+      err.image = "Image is required";
+    } else {
+      // Image extension validation
+      const allowedExtensions = ["webp", "jpg", "jpeg"];
+      const fileExtension = image.name.split(".").pop()?.toLowerCase();
+
+      if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+        err.image = "Only .webp, .jpg and .jpeg images are allowed";
+      }
+    }
+
     if (!formData.mediaType) {
       err.mediaType = "Media Type is required";
     }
