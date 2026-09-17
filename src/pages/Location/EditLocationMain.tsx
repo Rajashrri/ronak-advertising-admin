@@ -386,16 +386,15 @@ export default function EditLocationMain() {
                     <label className="mb-2 block text-sm font-medium">
                       Replace Image
                     </label>
-
+                    <p className="text-red-500 text-sm mt-1">
+                      Image Size: 582 × 369 px | Allowed Extension: .webp, .jpg,
+                      .jpeg
+                    </p>
                     <input
                       type="file"
                       accept="image/*"
                       onChange={handleImage}
                     />
-                    <p className="text-red-500 text-sm mt-1">
-                      Image Size: 582 × 369 px | Allowed Extension: .webp, .jpg,
-                      .jpeg
-                    </p>
                   </div>
 
                   {/* YouTube */}

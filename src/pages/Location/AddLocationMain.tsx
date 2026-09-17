@@ -340,16 +340,16 @@ export default function AddLocationMain() {
                     <label className="mb-2 block text-sm font-medium">
                       Image
                     </label>
-
+                    <p className="text-red-500 text-sm mt-1">
+                      Image Size: 582 × 369 px | Allowed Extension: .webp, .jpg,
+                      .jpeg
+                    </p>
                     <input
                       type="file"
                       accept="image/*"
                       onChange={handleImage}
                     />
-                    <p className="text-red-500 text-sm mt-1">
-                      Image Size: 582 × 369 px | Allowed Extension: .webp, .jpg,
-                      .jpeg
-                    </p>
+
                     {errors.image && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.image}
