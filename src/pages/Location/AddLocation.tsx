@@ -190,7 +190,7 @@ export default function AddLocation() {
                       Image
                     </label>
                     <p className="text-red-500 text-sm mt-1">
-                      Image Size: 790 × 357 px | Allowed Extensions: .webp
+                      Image Size: 790 × 357 px | Allowed Extension: .webp
                     </p>
                     <input
                       type="file"

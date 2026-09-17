@@ -392,7 +392,7 @@ export default function AddLocationMain() {
                         (Maximum 10 images allowed.)
                       </p>
                       <p className="text-red-500 text-sm mt-1">
-                        Image Size: 1236 × 486 px | Allowed Extensions: .webp
+                        Image Size: 1236 × 486 px | Allowed Extension: .webp
                       
                       </p>
                     </label>
