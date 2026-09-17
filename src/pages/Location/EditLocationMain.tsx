@@ -422,6 +422,9 @@ export default function EditLocationMain() {
                       <p className="mb-3 text-sm text-red-500">
                         (Maximum 10 images allowed.)
                       </p>
+                       <p className="text-red-500 text-sm mt-1">
+  Image Size: 1236 × 486 px | Allowed Extensions: .webp, .jpg, .jpeg
+</p>
                     </label>
 
                     {/* ================= EXISTING GALLERY ================= */}
@@ -498,9 +501,7 @@ export default function EditLocationMain() {
                           onChange={handleGallery}
                           className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                         />
-<p className="text-red-500 text-sm mt-1">
-  Image Size: 1236 × 486 px | Allowed Extensions: .webp, .jpg, .jpeg
-</p>
+
                         <div className="text-center">
                           <div className="mb-3 text-4xl">📁</div>
 
