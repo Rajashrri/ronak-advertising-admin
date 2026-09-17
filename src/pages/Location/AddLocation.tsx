@@ -189,7 +189,10 @@ export default function AddLocation() {
                     <label className="mb-1.5 block text-sm font-medium">
                       Image
                     </label>
-
+  <p className="text-red-500 text-sm mt-1">
+                      Image Size: 790 × 357 px | Allowed Extensions: .webp,
+                      .jpg, .jpeg
+                    </p>
                     <input
                       type="file"
                       accept="image/*"
@@ -197,10 +200,7 @@ export default function AddLocation() {
                     />
 
                     {/* Image Guidelines */}
-                    <p className="text-red-500 text-sm mt-1">
-                      Image Size: 790 × 357 px | Allowed Extensions: .webp,
-                      .jpg, .jpeg
-                    </p>
+                  
 
                     {errors.image && (
                       <p className="text-red-500 text-sm">{errors.image}</p>

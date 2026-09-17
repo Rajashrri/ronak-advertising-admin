@@ -77,6 +77,18 @@ export default function EditLocation() {
     if (!formData.ideal) {
       err.ideal = "Ideal for is required";
     }
+
+     if (!image) {
+      err.image = "Image is required";
+    } else {
+      // Image extension validation
+      const allowedExtensions = ["webp", "jpg", "jpeg"];
+      const fileExtension = image.name.split(".").pop()?.toLowerCase();
+
+      if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+        err.image = "Only .webp, .jpg and .jpeg images are allowed";
+      }
+    }
     setErrors(err);
 
     return Object.keys(err).length === 0;
@@ -222,18 +234,18 @@ export default function EditLocation() {
                     <label className="mb-1.5 block text-sm font-medium">
                       Change Image
                     </label>
-
+   {/* Image Guidelines */}
+                    <p className="text-red-500 text-sm mt-1">
+                      Image Size: 790 × 357 px | Allowed Extensions: .webp,
+                      .jpg, .jpeg
+                    </p>
                     <input
                       type="file"
                       accept="image/*"
                       onChange={(e) => setImage(e.target.files?.[0] || null)}
                     />
 
-                    {/* Image Guidelines */}
-                    <p className="text-red-500 text-sm mt-1">
-                      Image Size: 790 × 357 px | Allowed Extensions: .webp,
-                      .jpg, .jpeg
-                    </p>
+                 
                   </div>
 
                   {/* Button */}
