@@ -78,7 +78,7 @@ export default function EditLocation() {
       err.ideal = "Ideal for is required";
     }
 
-     if (!image) {
+    if (!image) {
       err.image = "Image is required";
     } else {
       // Image extension validation
@@ -234,7 +234,7 @@ export default function EditLocation() {
                     <label className="mb-1.5 block text-sm font-medium">
                       Change Image
                     </label>
-   {/* Image Guidelines */}
+                    {/* Image Guidelines */}
                     <p className="text-red-500 text-sm mt-1">
                       Image Size: 790 × 357 px | Allowed Extensions: .webp,
                       .jpg, .jpeg
@@ -244,8 +244,9 @@ export default function EditLocation() {
                       accept="image/*"
                       onChange={(e) => setImage(e.target.files?.[0] || null)}
                     />
-
-                 
+                    {errors.image && (
+                      <p className="text-red-500 text-sm">{errors.image}</p>
+                    )}
                   </div>
 
                   {/* Button */}
