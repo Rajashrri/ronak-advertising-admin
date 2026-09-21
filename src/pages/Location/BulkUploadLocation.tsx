@@ -44,6 +44,7 @@ export default function BulkUpload() {
   const [search, setSearch] = useState("");
   const [mainZip, setMainZip] = useState<File | null>(null);
   const [galleryZip, setGalleryZip] = useState<File | null>(null);
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
@@ -53,11 +54,12 @@ export default function BulkUpload() {
 
   const [excel, setExcel] = useState<File | null>(null);
 
-  const [viewRecord, setViewRecord] = useState<BulkUploadRecord | null>(null);
+  const [viewRecord, setViewRecord] =
+    useState<BulkUploadRecord | null>(null);
 
-  /* --------------------------------
-     Fetch List
-  -------------------------------- */
+  /* =========================================================
+     FETCH BULK UPLOAD HISTORY
+  ========================================================= */
 
   const fetchBulkUploads = async () => {
     try {
@@ -72,9 +74,13 @@ export default function BulkUpload() {
       if (response.data.success) {
         setRecords(response.data.data || []);
 
-        setTotalPages(response.data.pagination?.totalPages || 1);
+        setTotalPages(
+          response.data.pagination?.totalPages || 1,
+        );
 
-        setTotalRecords(response.data.pagination?.total || 0);
+        setTotalRecords(
+          response.data.pagination?.total || 0,
+        );
       }
     } catch (error) {
       console.error("Bulk upload list error:", error);
@@ -89,15 +95,19 @@ export default function BulkUpload() {
     fetchBulkUploads();
   }, [page, limit, search]);
 
-  /* --------------------------------
-     Upload Form
-  -------------------------------- */
+  /* =========================================================
+     RESET UPLOAD FORM
+  ========================================================= */
 
   const resetUploadForm = () => {
     setExcel(null);
     setMainZip(null);
     setGalleryZip(null);
   };
+
+  /* =========================================================
+     CLOSE UPLOAD MODAL
+  ========================================================= */
 
   const closeUploadModal = () => {
     if (uploading) return;
@@ -106,15 +116,23 @@ export default function BulkUpload() {
     resetUploadForm();
   };
 
-  /* --------------------------------
-     Upload
-  -------------------------------- */
+  /* =========================================================
+     HANDLE UPLOAD
+  ========================================================= */
 
   const handleUpload = async () => {
+    console.log("🔥 handleUpload CALLED");
+
+    // Prevent accidental double click
+    if (uploading) {
+      console.log("⚠️ Upload already in progress");
+      return;
+    }
+
     try {
-      // =========================
-      // REQUIRED FILES
-      // =========================
+      /* =====================================================
+         REQUIRED FILES
+      ===================================================== */
 
       if (!excel) {
         toast.error("Please select Excel file");
@@ -126,31 +144,60 @@ export default function BulkUpload() {
         return;
       }
 
-      // =========================
-      // EXCEL VALIDATION
-      // =========================
+      /* =====================================================
+         EXCEL VALIDATION
+      ===================================================== */
 
-      const excelExtension = excel.name.split(".").pop()?.toLowerCase();
+      const excelExtension = excel.name
+        .split(".")
+        .pop()
+        ?.toLowerCase();
 
-      if (excelExtension !== "xlsx" && excelExtension !== "xls") {
+      if (
+        excelExtension !== "xlsx" &&
+        excelExtension !== "xls"
+      ) {
         toast.error("Please select a valid Excel file");
         return;
       }
 
-      // =========================
-      // MAIN ZIP VALIDATION
-      // =========================
+      /* =====================================================
+         MAIN ZIP VALIDATION
+      ===================================================== */
 
-      const mainZipExtension = mainZip.name.split(".").pop()?.toLowerCase();
+      const mainZipExtension = mainZip.name
+        .split(".")
+        .pop()
+        ?.toLowerCase();
 
       if (mainZipExtension !== "zip") {
-        toast.error("Please select a valid Main Images ZIP file");
+        toast.error(
+          "Please select a valid Main Images ZIP file",
+        );
         return;
       }
 
-      // =========================
-      // FORM DATA
-      // =========================
+      /* =====================================================
+         GALLERY ZIP VALIDATION
+      ===================================================== */
+
+      if (galleryZip) {
+        const galleryZipExtension = galleryZip.name
+          .split(".")
+          .pop()
+          ?.toLowerCase();
+
+        if (galleryZipExtension !== "zip") {
+          toast.error(
+            "Please select a valid Gallery Images ZIP file",
+          );
+          return;
+        }
+      }
+
+      /* =====================================================
+         FORM DATA
+      ===================================================== */
 
       const formData = new FormData();
 
@@ -161,16 +208,55 @@ export default function BulkUpload() {
         formData.append("galleryZip", galleryZip);
       }
 
-      // =========================
-      // UPLOAD
-      // =========================
+      /* =====================================================
+         DEBUG
+      ===================================================== */
+
+      console.log("🔥 SENDING BULK UPLOAD API");
+
+      console.log("Excel:", {
+        name: excel.name,
+        size: excel.size,
+        type: excel.type,
+      });
+
+      console.log("Main ZIP:", {
+        name: mainZip.name,
+        size: mainZip.size,
+        type: mainZip.type,
+      });
+
+      if (galleryZip) {
+        console.log("Gallery ZIP:", {
+          name: galleryZip.name,
+          size: galleryZip.size,
+          type: galleryZip.type,
+        });
+      }
+
+      /* =====================================================
+         START UPLOAD
+      ===================================================== */
 
       setUploading(true);
 
-      const response = await locationMainBulkUploadApi(formData);
+      const response =
+        await locationMainBulkUploadApi(formData);
+
+      console.log(
+        "🔥 BULK UPLOAD RESPONSE:",
+        response.data,
+      );
+
+      /* =====================================================
+         SUCCESS
+      ===================================================== */
 
       if (response.data.success) {
-        toast.success(response.data.message || "Bulk upload completed");
+        toast.success(
+          response.data.message ||
+            "Bulk upload completed",
+        );
 
         setOpenModal(false);
 
@@ -179,39 +265,58 @@ export default function BulkUpload() {
         setPage(1);
 
         await fetchBulkUploads();
+      } else {
+        toast.error(
+          response.data.message ||
+            "Bulk upload failed",
+        );
       }
     } catch (error: any) {
-      console.error("Bulk upload error:", error);
+      console.error(
+        "🔥 BULK UPLOAD ERROR:",
+        error,
+      );
 
-      console.error("Backend response:", error.response?.data);
+      console.error(
+        "🔥 STATUS:",
+        error.response?.status,
+      );
 
-      toast.error(error.response?.data?.message || "Upload failed");
+      console.error(
+        "🔥 BACKEND RESPONSE:",
+        error.response?.data,
+      );
+
+      toast.error(
+        error.response?.data?.message ||
+          "Upload failed",
+      );
     } finally {
       setUploading(false);
     }
   };
 
-  /* --------------------------------
-     Search
-  -------------------------------- */
+  /* =========================================================
+     SEARCH
+  ========================================================= */
 
   const handleSearch = (value: string) => {
     setSearch(value);
     setPage(1);
   };
 
-  /* --------------------------------
-     Limit
-  -------------------------------- */
+  /* =========================================================
+     LIMIT
+  ========================================================= */
 
   const handleLimitChange = (value: number) => {
     setLimit(value);
     setPage(1);
   };
 
-  /* --------------------------------
-     File Size
-  -------------------------------- */
+  /* =========================================================
+     FILE SIZE
+  ========================================================= */
 
   const formatFileSize = (size: number) => {
     if (size < 1024) {
@@ -225,6 +330,10 @@ export default function BulkUpload() {
     return `${(size / (1024 * 1024)).toFixed(1)} MB`;
   };
 
+  /* =========================================================
+     RENDER
+  ========================================================= */
+
   return (
     <>
       <PageBreadcrumb pageTitle="Bulk Upload Location Master" />
@@ -232,11 +341,13 @@ export default function BulkUpload() {
       <div className="space-y-6">
         <ComponentCard title="Bulk Upload Location Master">
           <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
-            {/* =====================================
+
+            {/* =================================================
                 HEADER
-            ====================================== */}
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Download Sample */}
+            ================================================= */}
+
+            <div className="flex flex-wrap items-center gap-3 px-6 py-4">
+              {/* DOWNLOAD SAMPLE */}
 
               <a
                 href="/sample/location-site-bulk-upload.xlsx"
@@ -255,27 +366,33 @@ export default function BulkUpload() {
                   <path d="m7 10 5 5 5-5" />
                   <path d="M5 21h14" />
                 </svg>
+
                 Download Sample
               </a>
 
-              {/* Bulk Upload */}
+              {/* BULK UPLOAD */}
 
               <button
                 type="button"
                 onClick={() => setOpenModal(true)}
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
               >
-                <span className="text-lg leading-none">+</span>
+                <span className="text-lg leading-none">
+                  +
+                </span>
+
                 Bulk Upload
               </button>
             </div>
-            {/* =====================================
+
+            {/* =================================================
                 FILTER BAR
-            ====================================== */}
+            ================================================= */}
 
             <div className="border-b border-gray-100 bg-gray-50/70 px-6 py-4 dark:border-gray-800 dark:bg-gray-900">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                {/* Search */}
+
+                {/* SEARCH */}
 
                 <div className="relative w-full md:max-w-sm">
                   <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -296,27 +413,30 @@ export default function BulkUpload() {
                     type="text"
                     placeholder="Search file name..."
                     value={search}
-                    onChange={(e) => handleSearch(e.target.value)}
+                    onChange={(e) =>
+                      handleSearch(e.target.value)
+                    }
                     className="h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm text-gray-700 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                   />
                 </div>
 
-                {/* Entries */}
+                {/* ENTRIES */}
 
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <span>Show</span>
 
                   <select
                     value={limit}
-                    onChange={(e) => handleLimitChange(Number(e.target.value))}
+                    onChange={(e) =>
+                      handleLimitChange(
+                        Number(e.target.value),
+                      )
+                    }
                     className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm outline-none focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800"
                   >
                     <option value={5}>5</option>
-
                     <option value={10}>10</option>
-
                     <option value={20}>20</option>
-
                     <option value={50}>50</option>
                   </select>
 
@@ -325,14 +445,15 @@ export default function BulkUpload() {
               </div>
             </div>
 
-            {/* =====================================
+            {/* =================================================
                 TABLE
-            ====================================== */}
+            ================================================= */}
 
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-gray-50 dark:bg-gray-800/50">
+
                     <TableCell
                       isHeader
                       className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500"
@@ -392,36 +513,50 @@ export default function BulkUpload() {
                 </TableHeader>
 
                 <TableBody>
-                  {/* Loading */}
+
+                  {/* LOADING */}
 
                   {loading ? (
                     <TableRow>
-                      <TableCell colSpan={8} className="py-16 text-center">
+                      <TableCell
+                        colSpan={8}
+                        className="py-16 text-center"
+                      >
                         <div className="flex flex-col items-center justify-center gap-3">
+
                           <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
 
                           <span className="text-sm text-gray-500">
                             Loading upload history...
                           </span>
+
                         </div>
                       </TableCell>
                     </TableRow>
+
                   ) : records.length > 0 ? (
+
+                    /* RECORDS */
+
                     records.map((item, index) => (
                       <TableRow
                         key={item._id}
                         className="transition hover:bg-gray-50 dark:hover:bg-gray-800/40"
                       >
-                        {/* Sr No */}
+
+                        {/* SR NO */}
 
                         <TableCell className="px-6 py-4 text-sm font-medium text-gray-500">
-                          {(page - 1) * limit + index + 1}
+                          {(page - 1) * limit +
+                            index +
+                            1}
                         </TableCell>
 
-                        {/* File */}
+                        {/* FILE NAME */}
 
                         <TableCell className="px-6 py-4">
                           <div className="flex items-center gap-3">
+
                             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-500/10">
                               <svg
                                 width="20"
@@ -448,10 +583,11 @@ export default function BulkUpload() {
                                 Location Master
                               </p>
                             </div>
+
                           </div>
                         </TableCell>
 
-                        {/* Total */}
+                        {/* TOTAL */}
 
                         <TableCell className="px-6 py-4">
                           <span className="inline-flex min-w-[40px] justify-center rounded-md bg-gray-100 px-2.5 py-1 text-sm font-semibold text-gray-700 dark:bg-gray-800 dark:text-gray-300">
@@ -459,7 +595,7 @@ export default function BulkUpload() {
                           </span>
                         </TableCell>
 
-                        {/* Success */}
+                        {/* SUCCESS */}
 
                         <TableCell className="px-6 py-4">
                           <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700 dark:bg-green-500/10 dark:text-green-400">
@@ -469,7 +605,7 @@ export default function BulkUpload() {
                           </span>
                         </TableCell>
 
-                        {/* Failed */}
+                        {/* FAILED */}
 
                         <TableCell className="px-6 py-4">
                           <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 dark:bg-red-500/10 dark:text-red-400">
@@ -479,15 +615,17 @@ export default function BulkUpload() {
                           </span>
                         </TableCell>
 
-                        {/* Status */}
+                        {/* STATUS */}
 
                         <TableCell className="px-6 py-4">
                           <Badge
                             size="sm"
                             color={
-                              item.status === "Completed"
+                              item.status ===
+                              "Completed"
                                 ? "success"
-                                : item.status === "Failed"
+                                : item.status ===
+                                    "Failed"
                                   ? "error"
                                   : "warning"
                             }
@@ -496,11 +634,13 @@ export default function BulkUpload() {
                           </Badge>
                         </TableCell>
 
-                        {/* Date */}
+                        {/* DATE */}
 
                         <TableCell className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                           {item.createdAt
-                            ? new Date(item.createdAt).toLocaleDateString(
+                            ? new Date(
+                                item.createdAt,
+                              ).toLocaleDateString(
                                 "en-GB",
                                 {
                                   day: "2-digit",
@@ -511,13 +651,15 @@ export default function BulkUpload() {
                             : "-"}
                         </TableCell>
 
-                        {/* Action */}
+                        {/* ACTION */}
 
                         <TableCell className="px-6 py-4">
                           {item.failedRecords > 0 ? (
                             <button
                               type="button"
-                              onClick={() => setViewRecord(item)}
+                              onClick={() =>
+                                setViewRecord(item)
+                              }
                               className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
                             >
                               <svg
@@ -529,8 +671,13 @@ export default function BulkUpload() {
                                 strokeWidth="2"
                               >
                                 <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
-                                <circle cx="12" cy="12" r="2.5" />
+                                <circle
+                                  cx="12"
+                                  cy="12"
+                                  r="2.5"
+                                />
                               </svg>
+
                               View
                             </button>
                           ) : (
@@ -539,12 +686,21 @@ export default function BulkUpload() {
                             </span>
                           )}
                         </TableCell>
+
                       </TableRow>
                     ))
+
                   ) : (
+
+                    /* NO RECORDS */
+
                     <TableRow>
-                      <TableCell colSpan={8} className="py-16 text-center">
+                      <TableCell
+                        colSpan={8}
+                        className="py-16 text-center"
+                      >
                         <div className="flex flex-col items-center">
+
                           <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
                             <svg
                               width="26"
@@ -566,42 +722,62 @@ export default function BulkUpload() {
                           </p>
 
                           <p className="mt-1 text-sm text-gray-400">
-                            Upload an Excel and ZIP file to get started.
+                            Upload an Excel and ZIP
+                            file to get started.
                           </p>
+
                         </div>
                       </TableCell>
                     </TableRow>
                   )}
+
                 </TableBody>
               </Table>
             </div>
 
-            {/* =====================================
+            {/* =================================================
                 PAGINATION
-            ====================================== */}
+            ================================================= */}
 
             <div className="flex flex-col gap-4 border-t border-gray-200 px-6 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-gray-800">
+
               <p className="text-sm text-gray-500">
                 Showing{" "}
+
                 <span className="font-semibold text-gray-700 dark:text-gray-300">
-                  {totalRecords === 0 ? 0 : (page - 1) * limit + 1}
-                </span>{" "}
-                to{" "}
+                  {totalRecords === 0
+                    ? 0
+                    : (page - 1) * limit + 1}
+                </span>
+
+                {" "}to{" "}
+
                 <span className="font-semibold text-gray-700 dark:text-gray-300">
-                  {Math.min(page * limit, totalRecords)}
-                </span>{" "}
-                of{" "}
+                  {Math.min(
+                    page * limit,
+                    totalRecords,
+                  )}
+                </span>
+
+                {" "}of{" "}
+
                 <span className="font-semibold text-gray-700 dark:text-gray-300">
                   {totalRecords}
-                </span>{" "}
-                entries
+                </span>
+
+                {" "}entries
               </p>
 
               <div className="flex items-center gap-2">
+
                 <button
                   type="button"
-                  disabled={page === 1 || loading}
-                  onClick={() => setPage((prev) => prev - 1)}
+                  disabled={
+                    page === 1 || loading
+                  }
+                  onClick={() =>
+                    setPage((prev) => prev - 1)
+                  }
                   className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
                 >
                   ← Previous
@@ -613,27 +789,37 @@ export default function BulkUpload() {
 
                 <button
                   type="button"
-                  disabled={page >= totalPages || loading}
-                  onClick={() => setPage((prev) => prev + 1)}
+                  disabled={
+                    page >= totalPages ||
+                    loading
+                  }
+                  onClick={() =>
+                    setPage((prev) => prev + 1)
+                  }
                   className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
                 >
                   Next →
                 </button>
+
               </div>
             </div>
           </div>
 
-          {/* =====================================
+          {/* =====================================================
               UPLOAD MODAL
-          ====================================== */}
+          ===================================================== */}
 
           {openModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+
               <div className="w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-gray-900">
-                {/* Modal Header */}
+
+                {/* HEADER */}
 
                 <div className="flex items-center justify-between border-b border-gray-200 px-6 py-5 dark:border-gray-800">
+
                   <div className="flex items-center gap-3">
+
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-green-600 dark:bg-green-500/10">
                       <svg
                         width="22"
@@ -655,9 +841,11 @@ export default function BulkUpload() {
                       </h2>
 
                       <p className="text-xs text-gray-500">
-                        Upload Excel data and location images
+                        Upload Excel data and location
+                        images
                       </p>
                     </div>
+
                   </div>
 
                   <button
@@ -668,20 +856,25 @@ export default function BulkUpload() {
                   >
                     ×
                   </button>
+
                 </div>
 
-                {/* Modal Body */}
+                {/* BODY */}
+
                 <div className="space-y-5 p-6">
-                  {/* =====================================
-      EXCEL
-  ====================================== */}
+
+                  {/* =================================================
+                      EXCEL
+                  ================================================= */}
 
                   <div>
+
                     <label className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
                       Excel File
                     </label>
 
                     <label className="flex cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-4 transition hover:border-blue-400 hover:bg-blue-50/50 dark:border-gray-700 dark:bg-gray-800">
+
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-500/10">
                         <svg
                           width="22"
@@ -699,6 +892,7 @@ export default function BulkUpload() {
                       </div>
 
                       <div className="min-w-0 flex-1">
+
                         {excel ? (
                           <>
                             <p className="truncate text-sm font-semibold text-gray-700 dark:text-gray-200">
@@ -706,7 +900,9 @@ export default function BulkUpload() {
                             </p>
 
                             <p className="mt-1 text-xs text-gray-400">
-                              {formatFileSize(excel.size)}
+                              {formatFileSize(
+                                excel.size,
+                              )}
                             </p>
                           </>
                         ) : (
@@ -720,32 +916,41 @@ export default function BulkUpload() {
                             </p>
                           </>
                         )}
+
                       </div>
 
                       <input
                         type="file"
                         accept=".xlsx,.xls"
                         disabled={uploading}
-                        onChange={(e) => setExcel(e.target.files?.[0] || null)}
+                        onChange={(e) =>
+                          setExcel(
+                            e.target.files?.[0] ||
+                              null,
+                          )
+                        }
                         className="hidden"
                       />
 
                       <span className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-600 dark:border-gray-700 dark:bg-gray-900">
                         Browse
                       </span>
+
                     </label>
                   </div>
 
-                  {/* =====================================
-      MAIN IMAGES ZIP
-  ====================================== */}
+                  {/* =================================================
+                      MAIN ZIP
+                  ================================================= */}
 
                   <div>
+
                     <label className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
                       Main Images ZIP
                     </label>
 
                     <label className="flex cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-4 transition hover:border-blue-400 hover:bg-blue-50/50 dark:border-gray-700 dark:bg-gray-800">
+
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-500/10">
                         <svg
                           width="22"
@@ -762,6 +967,7 @@ export default function BulkUpload() {
                       </div>
 
                       <div className="min-w-0 flex-1">
+
                         {mainZip ? (
                           <>
                             <p className="truncate text-sm font-semibold text-gray-700 dark:text-gray-200">
@@ -769,7 +975,9 @@ export default function BulkUpload() {
                             </p>
 
                             <p className="mt-1 text-xs text-gray-400">
-                              {formatFileSize(mainZip.size)}
+                              {formatFileSize(
+                                mainZip.size,
+                              )}
                             </p>
                           </>
                         ) : (
@@ -783,6 +991,7 @@ export default function BulkUpload() {
                             </p>
                           </>
                         )}
+
                       </div>
 
                       <input
@@ -790,7 +999,10 @@ export default function BulkUpload() {
                         accept=".zip"
                         disabled={uploading}
                         onChange={(e) =>
-                          setMainZip(e.target.files?.[0] || null)
+                          setMainZip(
+                            e.target.files?.[0] ||
+                              null,
+                          )
                         }
                         className="hidden"
                       />
@@ -798,19 +1010,22 @@ export default function BulkUpload() {
                       <span className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-600 dark:border-gray-700 dark:bg-gray-900">
                         Browse
                       </span>
+
                     </label>
                   </div>
 
-                  {/* =====================================
-      GALLERY IMAGES ZIP
-  ====================================== */}
+                  {/* =================================================
+                      GALLERY ZIP
+                  ================================================= */}
 
                   <div>
+
                     <label className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
                       Gallery Images ZIP
                     </label>
 
                     <label className="flex cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-4 transition hover:border-purple-400 hover:bg-purple-50/50 dark:border-gray-700 dark:bg-gray-800">
+
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-purple-100 text-purple-600 dark:bg-purple-500/10">
                         <svg
                           width="22"
@@ -820,15 +1035,26 @@ export default function BulkUpload() {
                           stroke="currentColor"
                           strokeWidth="2"
                         >
-                          <rect x="3" y="3" width="18" height="18" rx="2" />
+                          <rect
+                            x="3"
+                            y="3"
+                            width="18"
+                            height="18"
+                            rx="2"
+                          />
 
-                          <circle cx="8.5" cy="8.5" r="1.5" />
+                          <circle
+                            cx="8.5"
+                            cy="8.5"
+                            r="1.5"
+                          />
 
                           <path d="m21 15-5-5L5 21" />
                         </svg>
                       </div>
 
                       <div className="min-w-0 flex-1">
+
                         {galleryZip ? (
                           <>
                             <p className="truncate text-sm font-semibold text-gray-700 dark:text-gray-200">
@@ -836,7 +1062,9 @@ export default function BulkUpload() {
                             </p>
 
                             <p className="mt-1 text-xs text-gray-400">
-                              {formatFileSize(galleryZip.size)}
+                              {formatFileSize(
+                                galleryZip.size,
+                              )}
                             </p>
                           </>
                         ) : (
@@ -850,6 +1078,7 @@ export default function BulkUpload() {
                             </p>
                           </>
                         )}
+
                       </div>
 
                       <input
@@ -857,7 +1086,10 @@ export default function BulkUpload() {
                         accept=".zip"
                         disabled={uploading}
                         onChange={(e) =>
-                          setGalleryZip(e.target.files?.[0] || null)
+                          setGalleryZip(
+                            e.target.files?.[0] ||
+                              null,
+                          )
                         }
                         className="hidden"
                       />
@@ -865,15 +1097,18 @@ export default function BulkUpload() {
                       <span className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-600 dark:border-gray-700 dark:bg-gray-900">
                         Browse
                       </span>
+
                     </label>
                   </div>
 
-                  {/* =====================================
-      UPLOAD INSTRUCTIONS
-  ====================================== */}
+                  {/* =================================================
+                      INFO
+                  ================================================= */}
 
-                  {/* <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 dark:border-blue-500/20 dark:bg-blue-500/10">
+                  <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 dark:border-blue-500/20 dark:bg-blue-500/10">
+
                     <div className="flex gap-3">
+
                       <div className="mt-0.5 shrink-0 text-blue-600">
                         <svg
                           width="19"
@@ -883,7 +1118,11 @@ export default function BulkUpload() {
                           stroke="currentColor"
                           strokeWidth="2"
                         >
-                          <circle cx="12" cy="12" r="9" />
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="9"
+                          />
 
                           <path d="M12 11v5" />
 
@@ -892,49 +1131,44 @@ export default function BulkUpload() {
                       </div>
 
                       <div>
+
                         <p className="text-sm font-semibold text-blue-800 dark:text-blue-300">
                           Upload Instructions
                         </p>
 
                         <p className="mt-1 text-xs leading-5 text-blue-700 dark:text-blue-300/80">
-                          Excel ke <b>Location Name</b>, <b>Site Name</b>,{" "}
-                          <b>Media Type</b> aur <b>Image</b> required hain.
+                          Main ZIP is required.
                           <br />
-                          Location Name ka spelling Location Master se exactly
-                          same hona chahiye.
+                          Gallery ZIP is required only
+                          when Excel contains gallery
+                          images.
                           <br />
-                          Media Type sirf{" "}
-                          <b>
-                            Gantry, Flag, Hoarding, Cantilever, BQS (Bus
-                            Shelter), Kiosk
-                          </b>{" "}
-                          allowed hai.
+                          All images must be{" "}
+                          <b>.webp</b>.
                           <br />
-                          <b>Main Image</b> ko <b>Main Images ZIP</b> me hona
-                          chahiye.
-                          <br />
-                          <b>Gallery Images</b> ko <b>Gallery Images ZIP</b> me
-                          hona chahiye.
-                          <br />
-                          Gallery images Excel me comma separated honi chahiye.
-                          <br />
-                          Maximum <b>10 Gallery Images</b> allowed hain.
-                          <br />
-                          All images must be <b>.webp</b>.
+                          Maximum{" "}
+                          <b>10 Gallery Images</b>{" "}
+                          allowed.
                         </p>
+
                       </div>
+
                     </div>
-                  </div> */}
+                  </div>
+
                 </div>
 
-                {/* Footer */}
+                {/* =================================================
+                    UPLOAD MODAL FOOTER
+                ================================================= */}
 
-                <div className="flex justify-end gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-800 dark:bg-gray-800/40">
+                <div className="flex justify-end gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-800 dark:bg-gray-800/30">
+
                   <button
                     type="button"
                     disabled={uploading}
                     onClick={closeUploadModal}
-                    className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                    className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
                   >
                     Cancel
                   </button>
@@ -943,11 +1177,12 @@ export default function BulkUpload() {
                     type="button"
                     disabled={uploading}
                     onClick={handleUpload}
-                    className="inline-flex min-w-[110px] items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {uploading ? (
                       <>
                         <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+
                         Uploading...
                       </>
                     ) : (
@@ -957,22 +1192,28 @@ export default function BulkUpload() {
                       </>
                     )}
                   </button>
+
                 </div>
+
               </div>
             </div>
           )}
 
-          {/* =====================================
+          {/* =====================================================
               VIEW DETAILS MODAL
-          ====================================== */}
+          ===================================================== */}
 
           {viewRecord && (
             <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+
               <div className="flex max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-gray-900">
-                {/* Header */}
+
+                {/* HEADER */}
 
                 <div className="flex items-center justify-between border-b border-gray-200 px-6 py-5 dark:border-gray-800">
+
                   <div className="flex min-w-0 items-center gap-3">
+
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10">
                       <svg
                         width="21"
@@ -988,6 +1229,7 @@ export default function BulkUpload() {
                     </div>
 
                     <div className="min-w-0">
+
                       <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
                         Bulk Upload Details
                       </h2>
@@ -995,24 +1237,31 @@ export default function BulkUpload() {
                       <p className="max-w-[500px] truncate text-sm text-gray-500">
                         {viewRecord.fileName}
                       </p>
+
                     </div>
+
                   </div>
 
                   <button
                     type="button"
-                    onClick={() => setViewRecord(null)}
+                    onClick={() =>
+                      setViewRecord(null)
+                    }
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xl text-gray-400 transition hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800"
                   >
                     ×
                   </button>
+
                 </div>
 
-                {/* Summary */}
+                {/* SUMMARY */}
 
                 <div className="grid grid-cols-2 gap-4 border-b border-gray-200 bg-gray-50/60 p-6 sm:grid-cols-4 dark:border-gray-800 dark:bg-gray-800/30">
-                  {/* Total */}
+
+                  {/* TOTAL */}
 
                   <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
+
                     <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
                       Total
                     </p>
@@ -1020,11 +1269,13 @@ export default function BulkUpload() {
                     <p className="mt-2 text-2xl font-bold text-gray-800 dark:text-white">
                       {viewRecord.totalRecords}
                     </p>
+
                   </div>
 
-                  {/* Success */}
+                  {/* SUCCESS */}
 
                   <div className="rounded-xl border border-green-100 bg-green-50 p-4 dark:border-green-500/20 dark:bg-green-500/10">
+
                     <p className="text-xs font-medium uppercase tracking-wide text-green-600">
                       Success
                     </p>
@@ -1032,11 +1283,13 @@ export default function BulkUpload() {
                     <p className="mt-2 text-2xl font-bold text-green-600">
                       {viewRecord.successRecords}
                     </p>
+
                   </div>
 
-                  {/* Failed */}
+                  {/* FAILED */}
 
                   <div className="rounded-xl border border-red-100 bg-red-50 p-4 dark:border-red-500/20 dark:bg-red-500/10">
+
                     <p className="text-xs font-medium uppercase tracking-wide text-red-600">
                       Failed
                     </p>
@@ -1044,44 +1297,57 @@ export default function BulkUpload() {
                     <p className="mt-2 text-2xl font-bold text-red-600">
                       {viewRecord.failedRecords}
                     </p>
+
                   </div>
 
-                  {/* Status */}
+                  {/* STATUS */}
 
                   <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 dark:border-blue-500/20 dark:bg-blue-500/10">
+
                     <p className="text-xs font-medium uppercase tracking-wide text-blue-600">
                       Status
                     </p>
 
                     <div className="mt-3">
+
                       <Badge
                         size="sm"
                         color={
-                          viewRecord.status === "Completed"
+                          viewRecord.status ===
+                          "Completed"
                             ? "success"
-                            : viewRecord.status === "Failed"
+                            : viewRecord.status ===
+                                "Failed"
                               ? "error"
                               : "warning"
                         }
                       >
                         {viewRecord.status}
                       </Badge>
+
                     </div>
+
                   </div>
+
                 </div>
 
-                {/* Error Log */}
+                {/* ERROR LOG */}
 
                 <div className="min-h-0 flex-1 overflow-y-auto p-6">
+
                   <div className="mb-4 flex items-center justify-between">
+
                     <div>
+
                       <h3 className="font-semibold text-gray-800 dark:text-white">
                         Failed Records
                       </h3>
 
                       <p className="mt-1 text-xs text-gray-400">
-                        Details of records that could not be imported.
+                        Details of records that could not
+                        be imported.
                       </p>
+
                     </div>
 
                     {viewRecord.failedRecords > 0 && (
@@ -1089,14 +1355,22 @@ export default function BulkUpload() {
                         {viewRecord.failedRecords} Failed
                       </span>
                     )}
+
                   </div>
 
-                  {viewRecord.errorLog && viewRecord.errorLog.length > 0 ? (
+                  {viewRecord.errorLog &&
+                  viewRecord.errorLog.length > 0 ? (
+
                     <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+
                       <div className="overflow-x-auto">
+
                         <table className="w-full text-sm">
+
                           <thead>
+
                             <tr className="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
+
                               <th className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                                 Row
                               </th>
@@ -1108,45 +1382,69 @@ export default function BulkUpload() {
                               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                                 Error
                               </th>
+
                             </tr>
+
                           </thead>
 
                           <tbody>
-                            {viewRecord.errorLog.map((error, index) => (
-                              <tr
-                                key={index}
-                                className="border-b border-gray-100 last:border-0 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800/50"
-                              >
-                                <td className="whitespace-nowrap px-4 py-4">
-                                  <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-md bg-gray-100 px-2 text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-                                    {error.rowNo}
-                                  </span>
-                                </td>
 
-                                <td className="px-4 py-4">
-                                  <span className="font-medium text-gray-700 dark:text-gray-300">
-                                    {error.locationName || "-"}
-                                  </span>
-                                </td>
+                            {viewRecord.errorLog.map(
+                              (error, index) => (
+                                <tr
+                                  key={index}
+                                  className="border-b border-gray-100 last:border-0 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800/50"
+                                >
 
-                                <td className="px-4 py-4">
-                                  <div className="flex items-start gap-2">
-                                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
+                                  <td className="whitespace-nowrap px-4 py-4">
 
-                                    <span className="leading-5 text-red-600 dark:text-red-400">
-                                      {error.message}
+                                    <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-md bg-gray-100 px-2 text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                                      {error.rowNo}
                                     </span>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))}
+
+                                  </td>
+
+                                  <td className="px-4 py-4">
+
+                                    <span className="font-medium text-gray-700 dark:text-gray-300">
+                                      {error.locationName ||
+                                        "-"}
+                                    </span>
+
+                                  </td>
+
+                                  <td className="px-4 py-4">
+
+                                    <div className="flex items-start gap-2">
+
+                                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
+
+                                      <span className="leading-5 text-red-600 dark:text-red-400">
+                                        {error.message}
+                                      </span>
+
+                                    </div>
+
+                                  </td>
+
+                                </tr>
+                              ),
+                            )}
+
                           </tbody>
+
                         </table>
+
                       </div>
+
                     </div>
+
                   ) : (
+
                     <div className="flex flex-col items-center justify-center rounded-xl border border-green-100 bg-green-50 py-12 dark:border-green-500/20 dark:bg-green-500/10">
+
                       <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-500/20">
+
                         <svg
                           width="24"
                           height="24"
@@ -1157,6 +1455,7 @@ export default function BulkUpload() {
                         >
                           <path d="m5 12 4 4L19 6" />
                         </svg>
+
                       </div>
 
                       <p className="font-semibold text-green-700 dark:text-green-400">
@@ -1164,37 +1463,35 @@ export default function BulkUpload() {
                       </p>
 
                       <p className="mt-1 text-sm text-green-600/70">
-                        All records were uploaded successfully.
+                        All records were uploaded
+                        successfully.
                       </p>
+
                     </div>
                   )}
+
                 </div>
 
-                {/* Footer */}
+                {/* VIEW DETAILS FOOTER */}
 
                 <div className="flex justify-end border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-800 dark:bg-gray-800/30">
+
                   <button
                     type="button"
-                    disabled={uploading}
-                    onClick={handleUpload}
-                    className="inline-flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-70"
+                    onClick={() =>
+                      setViewRecord(null)
+                    }
+                    className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
                   >
-                    {uploading ? (
-                      <>
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                        Uploading...
-                      </>
-                    ) : (
-                      <>
-                        Upload
-                        <span>→</span>
-                      </>
-                    )}
+                    Close
                   </button>
+
                 </div>
+
               </div>
             </div>
           )}
+
         </ComponentCard>
       </div>
     </>

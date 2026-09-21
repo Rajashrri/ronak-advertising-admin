@@ -115,16 +115,21 @@ export default function BulkUpload() {
   -------------------------------- */
 
   const handleUpload = async () => {
+     if (uploading) {
+    return;
+  }
     try {
-      if (!excel) {
-        toast.error("Please select Excel file");
-        return;
-      }
+        console.log("🔥 handleUpload CALLED");
 
-      if (!zip) {
-        toast.error("Please select Images ZIP file");
-        return;
-      }
+    if (!excel) {
+      toast.error("Please select Excel file");
+      return;
+    }
+
+    if (!zip) {
+      toast.error("Please select Images ZIP file");
+      return;
+    }
 
       const excelExtension = excel.name
         .split(".")
