@@ -100,6 +100,7 @@ const navItems: NavItem[] = [
       { name: "Add Location", path: "/add-location", pro: false },
       { name: "List Location", path: "/list-location", pro: false },
             { name: "Bulk Upload Location Master", path: "/bulkupload-locationmaster", pro: false },
+            { name: "Bulk Upload Location", path: "/bulkupload-location", pro: false },
 
     ],
   },

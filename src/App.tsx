@@ -81,6 +81,7 @@ import Newsletter from "./pages/List/Newsletter";
 import LocationEnquiry from "./pages/List/LocationEnquiry";
 import PopupEnquiry from "./pages/List/PopupEnquiry";
 import BulkUpload from "./pages/Location/BulkUploadmaster";
+import BulkUploadLocation from "./pages/Location/BulkUploadLocation";
 
 
 import AuthGuard from "./components/AuthGuard";
@@ -192,6 +193,7 @@ export default function App() {
             <Route path="/enquiry-list" element={<LocationEnquiry />} />
             <Route path="/popupenq-list" element={<PopupEnquiry />} />
             <Route path="/bulkupload-locationmaster" element={<BulkUpload />} />
+            <Route path="/bulkupload-location" element={<BulkUploadLocation />} />
 
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
