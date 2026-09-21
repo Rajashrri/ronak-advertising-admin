@@ -110,114 +110,86 @@ export default function BulkUpload() {
      Upload
   -------------------------------- */
 
-const handleUpload = async () => {
-  setUploading(true);
+  const handleUpload = async () => {
+    try {
+      // =========================
+      // REQUIRED FILES
+      // =========================
 
-  try {
-    // =========================
-    // REQUIRED FILES
-    // =========================
+      if (!excel) {
+        toast.error("Please select Excel file");
+        return;
+      }
 
-    if (!excel) {
-      toast.error("Please select Excel file");
-      return;
+      if (!mainZip) {
+        toast.error("Please select Main Images ZIP");
+        return;
+      }
+
+      // =========================
+      // EXCEL VALIDATION
+      // =========================
+
+      const excelExtension = excel.name.split(".").pop()?.toLowerCase();
+
+      if (excelExtension !== "xlsx" && excelExtension !== "xls") {
+        toast.error("Please select a valid Excel file");
+        return;
+      }
+
+      // =========================
+      // MAIN ZIP VALIDATION
+      // =========================
+
+      const mainZipExtension = mainZip.name.split(".").pop()?.toLowerCase();
+
+      if (mainZipExtension !== "zip") {
+        toast.error("Please select a valid Main Images ZIP file");
+        return;
+      }
+
+      // =========================
+      // FORM DATA
+      // =========================
+
+      const formData = new FormData();
+
+      formData.append("excel", excel);
+      formData.append("mainZip", mainZip);
+
+      if (galleryZip) {
+        formData.append("galleryZip", galleryZip);
+      }
+
+      // =========================
+      // UPLOAD
+      // =========================
+
+      setUploading(true);
+
+      const response = await locationMainBulkUploadApi(formData);
+
+      if (response.data.success) {
+        toast.success(response.data.message || "Bulk upload completed");
+
+        setOpenModal(false);
+
+        resetUploadForm();
+
+        setPage(1);
+
+        await fetchBulkUploads();
+      }
+    } catch (error: any) {
+      console.error("Bulk upload error:", error);
+
+      console.error("Backend response:", error.response?.data);
+
+      toast.error(error.response?.data?.message || "Upload failed");
+    } finally {
+      setUploading(false);
     }
-
-    if (!mainZip) {
-      toast.error("Please select Main Images ZIP");
-      return;
-    }
-
-
-    // =========================
-    // EXCEL VALIDATION
-    // =========================
-
-    const excelExtension = excel.name
-      .split(".")
-      .pop()
-      ?.toLowerCase();
-
-    if (
-      excelExtension !== "xlsx" &&
-      excelExtension !== "xls"
-    ) {
-      toast.error("Please select a valid Excel file");
-      return;
-    }
-
-    // =========================
-    // MAIN ZIP VALIDATION
-    // =========================
-
-    const mainZipExtension = mainZip.name
-      .split(".")
-      .pop()
-      ?.toLowerCase();
-
-    if (mainZipExtension !== "zip") {
-      toast.error("Please select a valid Main Images ZIP file");
-      return;
-    }
-
-    // =========================
-    // GALLERY ZIP VALIDATION
-    // =========================
-
-
-    // =========================
-    // FORM DATA
-    // =========================
-
-    const formData = new FormData();
-
-    formData.append("excel", excel);
-    formData.append("mainZip", mainZip);
-if (galleryZip) {
-  formData.append(
-    "galleryZip",
-    galleryZip
-  );
-}
-    // =========================
-    // UPLOAD
-    // =========================
-
-    setUploading(true);
-
-    const response =
-      await locationMainBulkUploadApi(formData);
-
-    if (response.data.success) {
-      toast.success(
-        response.data.message ||
-          "Bulk upload completed"
-      );
-
-      setOpenModal(false);
-
-      resetUploadForm();
-
-      setPage(1);
-
-      await fetchBulkUploads();
-    }
- } catch (error: any) {
-  console.error("Bulk upload error:", error);
-
-  console.error(
-    "Backend response:",
-    error.response?.data
-  );
-
-  toast.error(
-    error.response?.data?.message ||
-      "Upload failed"
-  );
-} finally {
-  setUploading(false);
-}
-};
+  };
 
   /* --------------------------------
      Search
@@ -542,24 +514,30 @@ if (galleryZip) {
                         {/* Action */}
 
                         <TableCell className="px-6 py-4">
-                          <button
-                            type="button"
-                            onClick={() => setViewRecord(item)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3.5 py-2 text-xs font-semibold text-blue-600 transition hover:border-blue-300 hover:bg-blue-100 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-400"
-                          >
-                            <svg
-                              width="15"
-                              height="15"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
+                          {item.failedRecords > 0 ? (
+                            <button
+                              type="button"
+                              onClick={() => setViewRecord(item)}
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
                             >
-                              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                            View
-                          </button>
+                              <svg
+                                width="15"
+                                height="15"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                                <circle cx="12" cy="12" r="2.5" />
+                              </svg>
+                              View
+                            </button>
+                          ) : (
+                            <span className="text-xs font-medium text-gray-400">
+                              —
+                            </span>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))
@@ -1195,24 +1173,24 @@ if (galleryZip) {
                 {/* Footer */}
 
                 <div className="flex justify-end border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-800 dark:bg-gray-800/30">
-                 <button
-  type="button"
-  disabled={uploading}
-  onClick={handleUpload}
-  className="inline-flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-70"
->
-  {uploading ? (
-    <>
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-      Uploading...
-    </>
-  ) : (
-    <>
-      Upload
-      <span>→</span>
-    </>
-  )}
-</button>
+                  <button
+                    type="button"
+                    disabled={uploading}
+                    onClick={handleUpload}
+                    className="inline-flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {uploading ? (
+                      <>
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        Upload
+                        <span>→</span>
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
