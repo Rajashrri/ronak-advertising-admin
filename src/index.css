@@ -879,3 +879,7 @@ span.flatpickr-weekday,
 .menu-item-icon-active{
   color: #dd2b1c;
 }
+.Toastify{
+            z-index: 11111111111;
+    position: relative;
+    }
