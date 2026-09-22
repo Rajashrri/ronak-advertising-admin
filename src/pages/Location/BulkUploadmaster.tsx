@@ -1036,12 +1036,7 @@ const handleDownloadExcel = async (id: string) => {
                         </p>
 
                         <p className="mt-1 text-xs leading-5 text-blue-700 dark:text-blue-300/80">
-                          Excel ke{" "}
-                          <b>Image</b> column
-                          ka filename ZIP ke
-                          image filename se
-                          exactly match hona
-                          chahiye.
+                          The filename in the Image column of the Excel file should exactly match the image filename in the ZIP file.
                         </p>
 
                       </div>
