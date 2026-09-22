@@ -15,7 +15,7 @@ import Badge from "../../components/ui/badge/Badge";
 
 import {
   getBulkUploadListApi,
-  bulkUploadApi,
+  bulkUploadApi,downloadLocationBulkExcelApi
 } from "../../api/locationBulkUploadApi";
 
 interface ErrorLog {
@@ -59,7 +59,34 @@ export default function BulkUpload() {
   /* --------------------------------
      Fetch List
   -------------------------------- */
+const handleDownloadExcel = async (id: string) => {
+  try {
+    const response =
+      await downloadLocationBulkExcelApi(id);
 
+    if (
+      response.data.success &&
+      response.data.data?.fileUrl
+    ) {
+      window.open(
+        response.data.data.fileUrl,
+        "_blank"
+      );
+    } else {
+      toast.error("Excel file not found");
+    }
+  } catch (error: any) {
+    console.error(
+      "Download Excel error:",
+      error
+    );
+
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to download Excel"
+    );
+  }
+};
   const fetchBulkUploads = async () => {
     try {
       setLoading(true);
@@ -616,7 +643,15 @@ export default function BulkUpload() {
 
                               View
                             </button>
-
+<button
+  type="button"
+  onClick={() =>
+    handleDownloadExcel(item._id)
+  }
+  className="inline-flex items-center gap-1 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs font-semibold text-green-600 hover:bg-green-100"
+>
+  Download Excel
+</button>
                           </TableCell>
 
                         </TableRow>

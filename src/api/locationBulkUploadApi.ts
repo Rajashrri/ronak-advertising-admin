@@ -41,3 +41,6 @@ export const bulkUploadDetailApi = (
     `/detail/${id}`
   );
 };
+export const downloadLocationBulkExcelApi = async (id: string) => {
+  return bulkApi.get(`/download/${id}`);
+};
