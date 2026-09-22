@@ -34,3 +34,36 @@ export const getLocationMainBulkUploadDetailApi = (
 ) => {
   return bulkApi.get(`/detail/${id}`);
 };
+
+
+export const downloadLocationMainBulkUploadApi = async (
+  id: string
+) => {
+  const response = await bulkApi.get(
+    `/download/${id}`,
+    {
+      responseType: "blob",
+    }
+  );
+
+  const blob = new Blob([response.data]);
+
+  const url =
+    window.URL.createObjectURL(blob);
+
+  const link =
+    document.createElement("a");
+
+  link.href = url;
+
+  link.download =
+    "location-main-bulk-upload.xlsx";
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  link.remove();
+
+  window.URL.revokeObjectURL(url);
+};

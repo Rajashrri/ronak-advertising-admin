@@ -15,7 +15,7 @@ import Badge from "../../components/ui/badge/Badge";
 
 import {
   getLocationMainBulkUploadListApi,
-  locationMainBulkUploadApi,
+  locationMainBulkUploadApi,downloadLocationMainBulkUploadApi
 } from "../../api/locationMainBulkUploadApi";
 
 interface ErrorLog {
@@ -653,40 +653,52 @@ export default function BulkUpload() {
 
                         {/* ACTION */}
 
-                        <TableCell className="px-6 py-4">
-                          {item.failedRecords > 0 ? (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setViewRecord(item)
-                              }
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
-                            >
-                              <svg
-                                width="15"
-                                height="15"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
-                                <circle
-                                  cx="12"
-                                  cy="12"
-                                  r="2.5"
-                                />
-                              </svg>
+                    <TableCell className="px-6 py-4">
+  <div className="flex items-center gap-2">
 
-                              View
-                            </button>
-                          ) : (
-                            <span className="text-xs font-medium text-gray-400">
-                              —
-                            </span>
-                          )}
-                        </TableCell>
+    {/* DOWNLOAD EXCEL */}
 
+  <button
+  type="button"
+  onClick={() =>
+    downloadLocationMainBulkUploadApi(
+      item._id
+    )
+  }
+  className="text-blue-600 hover:underline"
+>
+  Download
+</button>
+    {/* VIEW ERRORS */}
+
+    {item.failedRecords > 0 ? (
+      <button
+        type="button"
+        onClick={() => setViewRecord(item)}
+        className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+          <circle
+            cx="12"
+            cy="12"
+            r="2.5"
+          />
+        </svg>
+
+        View
+      </button>
+    ) : null}
+
+  </div>
+</TableCell>
                       </TableRow>
                     ))
 
