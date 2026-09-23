@@ -822,9 +822,9 @@ export default function BulkUpload() {
           ===================================================== */}
 
           {openModal && (
-            <div className="w-full max-w-xl h-full overflow-y-auto overflow-x-hidden rounded-2xl bg-white shadow-2xl dark:bg-gray-900">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
 
-              <div className="w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-gray-900">
+              <div className="w-full max-w-xl h-full overflow-y-auto overflow-x-hidden rounded-2xl bg-white shadow-2xl dark:bg-gray-900">
 
                 {/* HEADER */}
 
